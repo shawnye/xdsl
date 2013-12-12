@@ -1,0 +1,122 @@
+body{
+	margin:0px auto;
+	padding:0px;
+	text-align: center;
+	font-size:12pt;
+}
+
+table{
+	border-collapse: collapse;
+	border: 1px solid gray;
+	width:97%;
+}
+	
+td{
+	border: 1px solid gray;
+	text-align: left;
+}
+
+table thead td{
+	font-weight: bold;
+	background: lightgray;
+	text-align: center;
+	white-space: nowrap;
+}
+	
+
+form{
+	display: inline;
+	margin: 0px;
+	padding:0px;
+}
+
+	.label{
+		background-color: #C8D1D2;
+		font-weight: bold;
+		text-align: right;
+	}
+	
+.text_input{
+	border: 1px solid gray;
+	background: #fff;
+}
+.text_input_focused{
+	background: #FFFFCC;
+}
+
+.data_area{
+	margin: 0px auto;
+	border:1px solid #000;
+}
+.data_area table{
+	border-collapse: collapse;
+	font-size: 12pt;
+	border: 1px solid #000;
+}
+.data_area table th{
+	white-space: nowrap;
+	text-align: center;
+}
+.data_area table td{
+	white-space: nowrap;
+	text-align: left;
+}
+.data_row{
+	background: #FFFFCC;
+}
+.even_data_row{
+	background: #CCFFCC;
+}
+.hilight_row{/*when mouse over*/
+	background: #CCFFFF;
+}
+.selected_row{
+	background: #FFCC99;
+}
+.empty_row{
+	border-color: gray;
+	color:gray;
+}
+img{
+	border: 0px;
+	vertical-align: middle;
+}
+
+.conditions{
+	border:1px solid gray;
+	float: left;
+	overflow: auto;
+}
+.conditions ul{
+	list-style-type:none;
+	margin: 0px;
+	padding:0px;
+	text-align: left;
+}
+
+.paging{
+	overflow: auto;
+	float: left;
+	/*border:1px solid #000;*/
+}
+
+
+a , a:VISITED, a:HOVER{
+		text-decoration: none;
+		color:blue;
+}
+	
+.emphasis{
+	color:red;
+	font-weight:bold;
+	background-color: yellow;
+}
+.title{
+	font-weight: bold;
+	font-size: 13pt;
+}
+/*号线权限*/
+.haoxian_privilege{
+	color:orange;
+ 	background-color: lightgray;
+}

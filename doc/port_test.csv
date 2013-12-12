@@ -1,0 +1,3 @@
+jx,sbh,type,slot,sb_port,mdf_port,used,board_type,inner_vlan,outer_vlan,ip,olt
+江门松籽苑,C300-1,FTTH,3 ,4 ,01-20-001,0,ETGO,2901,3480,172.26.144.246,江海松籽苑olt
+江门松籽苑,C300-1,FTTH,3 ,4 ,01-20-002,0,ETGO,2902,3480,172.26.144.246,江海松籽苑olt

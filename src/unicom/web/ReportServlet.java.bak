@@ -1,0 +1,118 @@
+package unicom.web;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+
+import unicom.bo.Report;
+import unicom.common.DateHelper;
+import unicom.common.SearchConditions;
+import unicom.xdsl.service.AbstractService;
+import unicom.xdsl.service.ReportService;
+
+/**
+ * Servlet implementation class ReportServlet
+ */
+public class ReportServlet extends BaseServlet {
+	private static final long serialVersionUID = 1L;
+
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ReportServlet() {
+        super();
+    }
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Enumeration parameterNames = request.getParameterNames();
+
+		SearchConditions searchCondition = new SearchConditions();
+
+		for (; parameterNames.hasMoreElements();) {
+			String name = (String) parameterNames.nextElement();
+			if(name.startsWith("@") || name.startsWith("page_")){
+//				request.setAttribute(name, request.getParameter(name));//reset
+				continue;//忽略@
+			}
+			String value = request.getParameter(name);//FIXME 只有string类型
+			if(value != null && StringUtils.isNotBlank(value)){
+				value = value.trim();
+
+				searchCondition.addCondition(name, value);
+				request.setAttribute(searchCondition.getEchoField(name), value);//回显
+			}
+
+		}
+
+		Boolean defaultCond=Boolean.valueOf(request.getParameter("@default"));
+		if(defaultCond){
+//			设置默认条件
+			this.setDefaultCondition(request, searchCondition);
+		}
+
+		ReportService reportService = (ReportService) wc.getBean("reportService");
+
+		String reportId = request.getParameter("@id");
+
+		InputStream inputStream = null;
+		List lines = null;
+		try {
+			inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("config/sql/report_" + reportId + ".sql");
+
+			if(inputStream != null){
+				lines = IOUtils.readLines(inputStream, "utf-8");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			request.getRequestDispatcher("/error505.jsp").forward(request, response);
+		} finally{
+			if(inputStream != null){
+				inputStream.close();
+			}
+		}
+
+
+		String sqlFetch = StringUtils.join(lines,"\n");
+
+ 		Integer pageLimit = null;
+
+ 		try {
+			pageLimit = Integer.parseInt(request.getParameter("page_limit"));
+		} catch (NumberFormatException e) {
+			pageLimit = 1500;
+		}
+		if(pageLimit < 1){
+			pageLimit = 1500;
+		}
+		request.setAttribute("page_limit",pageLimit);
+
+		Report report = reportService.getReport(sqlFetch, searchCondition, pageLimit);
+		report.setId(reportId);
+		request.setAttribute("report", report);
+
+		request.getRequestDispatcher("/WEB-INF/report/report_"+reportId+".jsp").forward(request, response);
+
+	}
+
+	protected void setDefaultCondition(HttpServletRequest request, SearchConditions searchCondition) {
+//		String key = "begin_date>=";
+//		searchCondition.addCondition(key ,DateHelper.getLastMonthStart(5));//半年内
+//
+//		request.setAttribute(searchCondition.getFieldStart(key), DateFormatUtils.format(searchCondition.getConditionValueAsDate(key), "yyyy-MM-dd"));
+
+	}
+}

@@ -1,0 +1,600 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr"><head>
+
+  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>proxool详细配置 - sunnylocus's blog - JavaEye技术网站</title>
+    
+    <meta name="description" content="        proxool一个数据库连接池框架，提供了对你选择的其它类型的驱动程序的连接池封装。可以非常简单的移植到现存的代码中。完全可配置。快速，成熟，健壮。可以透明地为你现存的JDBC驱动程序增加连接池功能。到目前为止最新版本是proxool 0.9.1,可从官网下载最新版本http://proxool.sourceforge.net   一、配置proxool.xml文件    &lt;? ...">
+    <meta name="keywords" content="proxool 配置 Hibernate proxool详细配置">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link href="/rss" rel="alternate" title="sunnylocus's blog" type="application/rss+xml">
+    <link href="http://www.javaeye.com/stylesheets/blog.css?1261400589" media="screen" rel="stylesheet" type="text/css">
+<link href="http://www.javaeye.com/stylesheets/themes/blog/red.css?1260254891" media="screen" rel="stylesheet" type="text/css">
+    <script src="http://www.javaeye.com/javascripts/application.js?1248170042" type="text/javascript"></script>
+      <link href="http://www.javaeye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1201588027" media="screen" rel="stylesheet" type="text/css">
+  <script src="http://www.javaeye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1238329845" type="text/javascript"></script>
+<script src="http://www.javaeye.com/javascripts/hotkey.js?1238403289" type="text/javascript"></script>
+  <style>
+    div#main {background-color: transparent; border: 0; padding: 0px; width: 740px;}
+  </style>
+  <link href="http://www.javaeye.com/javascripts/editor/css/ui.css?1222156967" media="screen" rel="stylesheet" type="text/css">
+  <script src="http://www.javaeye.com/javascripts/editor/compress.js?1250085246" type="text/javascript"></script><style type="text/css">.dp-xml .cdata { color: #ff1493; }.dp-xml .tag, .dp-xml .tag-name { color: #069; font-weight: bold; }.dp-xml .attribute { color: red; }.dp-xml .attribute-value { color: blue; }</style><style type="text/css">.dp-xml .cdata { color: #ff1493; }.dp-xml .tag, .dp-xml .tag-name { color: #069; font-weight: bold; }.dp-xml .attribute { color: red; }.dp-xml .attribute-value { color: blue; }</style><style type="text/css">.dp-xml .cdata { color: #ff1493; }.dp-xml .tag, .dp-xml .tag-name { color: #069; font-weight: bold; }.dp-xml .attribute { color: red; }.dp-xml .attribute-value { color: blue; }</style><base href="http://sunnylocus.javaeye.com/blog/359570"></head><body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.javaeye.com/" class="homepage">首页</a>
+  <a href="http://www.javaeye.com/news">新闻</a>
+  <a href="http://www.javaeye.com/forums">论坛</a>
+  <a href="http://www.javaeye.com/blogs">博客</a>
+  <a href="http://www.javaeye.com/job">招聘</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display: none;">
+    <a href="http://www.javaeye.com/ask">问答</a>
+    <a href="http://www.javaeye.com/wiki">知识库</a>
+    <a href="http://www.javaeye.com/groups">圈子</a>
+    <a href="http://www.javaeye.com/hunters">猎头</a>
+    <a href="http://www.javaeye.com/google_search">搜索</a>
+  </div>
+</div>
+      <div id="user_nav">
+      <a href="/login" class="welcome" title="登录">您还未登录 !</a>
+    <a href="http://www.javaeye.com/all" style="color: red;">我的应用</a>
+    <a href="/login">登录</a>
+    <a href="/signup" class="nobg">注册</a>
+  </div>
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name"><h1><a href="/">sunnylocus's blog</a></h1></div>
+        <div id="blog_preview"></div>
+        <div id="blog_domain">永久域名 <a href="/">http://sunnylocus.javaeye.com</a></div>
+      </div>
+      
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+
+<div class="blog_main"> 
+  <div class="blog_nav">
+    <div class="digg" id="d359570"><div><a href="#" onclick='digg("blogs", 359570, false);return false;' class="digg">5顶</a><br><a href="#" onclick='digg("blogs", 359570, true);return false;' class="bury">3踩</a></div></div>
+    <div class="pre_next">
+      <a href="/blog/383613" class="next" title="处理超出打开游标的最大数异常">处理超出打开游标的最大数异常</a>
+      |
+      <a href="/blog/354330" class="pre" title="用Java解析GPS经纬度">用Java解析GPS经纬度</a>
+    </div>
+  </div>
+  <div class="blog_title">
+    <div class="date"><span class="year">2009</span><span class="sep_year">-</span><span class="month">04</span><span class="sep_month">-</span><span class="day">02</span></div>
+    <h3 class="type_original" title="原创"><a href="/blog/359570"><span class="hilite1">proxool</span>详细配置</a></h3>
+                <strong>文章分类:<a href="http://www.javaeye.com/blogs/category/java" style="text-decoration: none; padding-right: 10px;">Java编程</a></strong>    关键字: <span class="hilite1">proxool</span> 配置
+  </div>
+
+  <div class="blog_content">
+    <p><span style="font-size: small;">        <span class="hilite1">proxool</span>一个数据库连接池框架，提供了对你选择的其它类型的驱动程序的连接池封装。可以非常简单的移植到现存的代码中。完全可配置。快速，成熟，健壮。可以透明地为你现存的JDBC驱动程序增加连接池功能。到目前为止最新版本是<span class="hilite1">proxool</span> 0.9.1,可从官网下载最新版本</span><a href="http://proxool.sourceforge.net"><span style="font-size: small;">http://<span class="a"><span style="color: rgb(35, 110, 238);"><strong><span class="hilite1">proxool</span></strong>.sourceforge.net</span></span></span></a></p>
+<p> </p>
+<p><span style="font-size: small;"><strong>一、配置<span class="hilite1">proxool</span>.xml文件</strong></span> </p>
+<p> </p>
+<div class="dp-highlighter"><div class="bar"><div class="tools">Xml代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" flashvars="clipboard=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%09%3C!--%0A%09%09the%20proxool%20configuration%20can%20be%20embedded%20within%20your%20own%0A%09%09application's.%20Anything%20outside%20the%20%22proxool%22%20tag%20is%20ignored.%0A%09--%3E%0A%3Csomething-else-entirely%3E%0A%09%3Cproxool%3E%0A%09%09%3Calias%3Edbname%3C%2Falias%3E%20%3C!--%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E5%88%AB%E5%90%8D--%3E%0A%09%09%3Cdriver-url%3Ejdbc%3Aoracle%3Athin%3A%40127.0.0.1%3A1521%3Atestdb%3C%2Fdriver-url%3E%3C!--url%E8%BF%9E%E6%8E%A5%E4%B8%B2--%3E%0A%09%09%3Cdriver-class%3Eoracle.jdbc.driver.OracleDriver%3C%2Fdriver-class%3E%20%3C!--%E9%A9%B1%E5%8A%A8%E7%B1%BB--%3E%0A%09%09%3Cdriver-properties%3E%0A%09%09%09%3Cproperty%20name%3D%22user%22%20value%3D%22username%22%20%2F%3E%20%3C!--%E7%94%A8%E6%88%B7%E5%90%8D--%3E%0A%09%09%09%3Cproperty%20name%3D%22password%22%20value%3D%22password%22%20%2F%3E%3C!--%E5%AF%86%E7%A0%81--%3E%0A%09%09%3C%2Fdriver-properties%3E%20%0A%09%09%3C!--%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E6%95%B0(%E9%BB%98%E8%AE%A45%E4%B8%AA)%2C%E8%B6%85%E8%BF%87%E4%BA%86%E8%BF%99%E4%B8%AA%E8%BF%9E%E6%8E%A5%E6%95%B0%2C%E5%86%8D%E6%9C%89%E8%AF%B7%E6%B1%82%E6%97%B6%2C%E5%B0%B1%E6%8E%92%E5%9C%A8%E9%98%9F%E5%88%97%E4%B8%AD%E7%AD%89%E5%80%99%2C%E6%9C%80%E5%A4%A7%E7%9A%84%E7%AD%89%E5%BE%85%E8%AF%B7%E6%B1%82%E6%95%B0%E7%94%B1maximum-new-connections%E5%86%B3%E5%AE%9A%20--%3E%0A%09%09%3Cmaximum-connection-count%3E100%3C%2Fmaximum-connection-count%3E%20%0A%09%09%3C!--%E6%9C%80%E5%B0%8F%E8%BF%9E%E6%8E%A5%E6%95%B0(%E9%BB%98%E8%AE%A42%E4%B8%AA)--%3E%0A%09%09%3Cminimum-connection-count%3E10%3C%2Fminimum-connection-count%3E%20%0A%09%09%3C!--proxool%E8%87%AA%E5%8A%A8%E4%BE%A6%E5%AF%9F%E5%90%84%E4%B8%AA%E8%BF%9E%E6%8E%A5%E7%8A%B6%E6%80%81%E7%9A%84%E6%97%B6%E9%97%B4%E9%97%B4%E9%9A%94(%E6%AF%AB%E7%A7%92)%2C%E4%BE%A6%E5%AF%9F%E5%88%B0%E7%A9%BA%E9%97%B2%E7%9A%84%E8%BF%9E%E6%8E%A5%E5%B0%B1%E9%A9%AC%E4%B8%8A%E5%9B%9E%E6%94%B6%2C%E8%B6%85%E6%97%B6%E7%9A%84%E9%94%80%E6%AF%81%20%E9%BB%98%E8%AE%A430%E7%A7%92--%3E%0A%09%09%3Chouse-keeping-sleep-time%3E90000%3C%2Fhouse-keeping-sleep-time%3E%0A%09%09%3C!--%E6%B2%A1%E6%9C%89%E7%A9%BA%E9%97%B2%E8%BF%9E%E6%8E%A5%E5%8F%AF%E4%BB%A5%E5%88%86%E9%85%8D%E8%80%8C%E5%9C%A8%E9%98%9F%E5%88%97%E4%B8%AD%E7%AD%89%E5%80%99%E7%9A%84%E6%9C%80%E5%A4%A7%E8%AF%B7%E6%B1%82%E6%95%B0%2C%E8%B6%85%E8%BF%87%E8%BF%99%E4%B8%AA%E8%AF%B7%E6%B1%82%E6%95%B0%E7%9A%84%E7%94%A8%E6%88%B7%E8%BF%9E%E6%8E%A5%E5%B0%B1%E4%B8%8D%E4%BC%9A%E8%A2%AB%E6%8E%A5%E5%8F%97--%3E%0A%09%09%3Cmaximum-new-connections%3E10%3C%2Fmaximum-new-connections%3E%20%0A%09%09%3C!--%E6%9C%80%E5%B0%91%E4%BF%9D%E6%8C%81%E7%9A%84%E7%A9%BA%E9%97%B2%E8%BF%9E%E6%8E%A5%E6%95%B0(%E9%BB%98%E8%AE%A42%E4%B8%AA)--%3E%0A%09%09%3Cprototype-count%3E5%3C%2Fprototype-count%3E%20%0A%09%09%3C!--%E5%9C%A8%E4%BD%BF%E7%94%A8%E4%B9%8B%E5%89%8D%E6%B5%8B%E8%AF%95--%3E%0A%09%09%3Ctest-before-use%3Etrue%3C%2Ftest-before-use%3E%0A%09%09%3C!--%E7%94%A8%E4%BA%8E%E4%BF%9D%E6%8C%81%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5%20--%3E%0A%09%09%3Chouse-keeping-test-sql%3Eselect%20sysdate%20from%20dual%3C%2Fhouse-keeping-test-sql%3E%0A%09%3C%2Fproxool%3E%0A%3C%2Fsomething-else-entirely%3E%20" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" height="15" width="14"></div></div><ol class="dp-xml" start="1"><li><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span> </span><span class="attribute">version</span><span>=</span><span class="attribute-value">"1.0"</span><span> </span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">"UTF-8"</span><span class="tag">?&gt;</span><span>  </span></span></li><li><span>    &lt;!--  </span></li><li><span>        the <span class="hilite1">proxool</span> configuration can be embedded within your own  </span></li><li><span>        application's. Anything outside the "<span class="hilite1">proxool</span>" tag is ignored.  </span></li><li><span>    --<span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;</span><span class="tag-name">something-else-entirely</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">alias</span><span class="tag">&gt;</span><span>dbname</span><span class="tag">&lt;/</span><span class="tag-name">alias</span><span class="tag">&gt;</span><span> </span><span class="comments">&lt;!--数据源的别名--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">driver-url</span><span class="tag">&gt;</span><span>jdbc:oracle:thin:@127.0.0.1:1521:testdb</span><span class="tag">&lt;/</span><span class="tag-name">driver-url</span><span class="tag">&gt;</span><span class="comments">&lt;!--url连接串--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">driver-class</span><span class="tag">&gt;</span><span>oracle.jdbc.driver.OracleDriver</span><span class="tag">&lt;/</span><span class="tag-name">driver-class</span><span class="tag">&gt;</span><span> </span><span class="comments">&lt;!--驱动类--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">driver-properties</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"user"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"username"</span><span> </span><span class="tag">/&gt;</span><span> </span><span class="comments">&lt;!--用户名--&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"password"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"password"</span><span> </span><span class="tag">/&gt;</span><span class="comments">&lt;!--密码--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;/</span><span class="tag-name">driver-properties</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>        <span class="comments">&lt;!--最大连接数(默认5个),超过了这个连接数,再有请求时,就排在队列中等候,最大的等待请求数由maximum-new-connections决定 --&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">maximum-connection-count</span><span class="tag">&gt;</span><span>100</span><span class="tag">&lt;/</span><span class="tag-name">maximum-connection-count</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>        <span class="comments">&lt;!--最小连接数(默认2个)--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">minimum-connection-count</span><span class="tag">&gt;</span><span>10</span><span class="tag">&lt;/</span><span class="tag-name">minimum-connection-count</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>        <span class="comments">&lt;!--<span class="hilite1">proxool</span>自动侦察各个连接状态的时间间隔(毫秒),侦察到空闲的连接就马上回收,超时的销毁 默认30秒--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">house-keeping-sleep-time</span><span class="tag">&gt;</span><span>90000</span><span class="tag">&lt;/</span><span class="tag-name">house-keeping-sleep-time</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="comments">&lt;!--没有空闲连接可以分配而在队列中等候的最大请求数,超过这个请求数的用户连接就不会被接受--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">maximum-new-connections</span><span class="tag">&gt;</span><span>10</span><span class="tag">&lt;/</span><span class="tag-name">maximum-new-connections</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>        <span class="comments">&lt;!--最少保持的空闲连接数(默认2个)--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">prototype-count</span><span class="tag">&gt;</span><span>5</span><span class="tag">&lt;/</span><span class="tag-name">prototype-count</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>        <span class="comments">&lt;!--在使用之前测试--&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">test-before-use</span><span class="tag">&gt;</span><span>true</span><span class="tag">&lt;/</span><span class="tag-name">test-before-use</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="comments">&lt;!--用于保持连接的测试语句 --&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name">house-keeping-test-sql</span><span class="tag">&gt;</span><span>select sysdate from dual</span><span class="tag">&lt;/</span><span class="tag-name">house-keeping-test-sql</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">something-else-entirely</span><span class="tag">&gt;</span><span>   </span></span></li></ol></div><pre style="display: none;" name="code" class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+	&lt;!--
+		the <span class="hilite1">proxool</span> configuration can be embedded within your own
+		application's. Anything outside the "<span class="hilite1">proxool</span>" tag is ignored.
+	--&gt;
+&lt;something-else-entirely&gt;
+	&lt;<span class="hilite1">proxool</span>&gt;
+		&lt;alias&gt;dbname&lt;/alias&gt; &lt;!--数据源的别名--&gt;
+		&lt;driver-url&gt;jdbc:oracle:thin:@127.0.0.1:1521:testdb&lt;/driver-url&gt;&lt;!--url连接串--&gt;
+		&lt;driver-class&gt;oracle.jdbc.driver.OracleDriver&lt;/driver-class&gt; &lt;!--驱动类--&gt;
+		&lt;driver-properties&gt;
+			&lt;property name="user" value="username" /&gt; &lt;!--用户名--&gt;
+			&lt;property name="password" value="password" /&gt;&lt;!--密码--&gt;
+		&lt;/driver-properties&gt; 
+		&lt;!--最大连接数(默认5个),超过了这个连接数,再有请求时,就排在队列中等候,最大的等待请求数由maximum-new-connections决定 --&gt;
+		&lt;maximum-connection-count&gt;100&lt;/maximum-connection-count&gt; 
+		&lt;!--最小连接数(默认2个)--&gt;
+		&lt;minimum-connection-count&gt;10&lt;/minimum-connection-count&gt; 
+		&lt;!--<span class="hilite1">proxool</span>自动侦察各个连接状态的时间间隔(毫秒),侦察到空闲的连接就马上回收,超时的销毁 默认30秒--&gt;
+		&lt;house-keeping-sleep-time&gt;90000&lt;/house-keeping-sleep-time&gt;
+		&lt;!--没有空闲连接可以分配而在队列中等候的最大请求数,超过这个请求数的用户连接就不会被接受--&gt;
+		&lt;maximum-new-connections&gt;10&lt;/maximum-new-connections&gt; 
+		&lt;!--最少保持的空闲连接数(默认2个)--&gt;
+		&lt;prototype-count&gt;5&lt;/prototype-count&gt; 
+		&lt;!--在使用之前测试--&gt;
+		&lt;test-before-use&gt;true&lt;/test-before-use&gt;
+		&lt;!--用于保持连接的测试语句 --&gt;
+		&lt;house-keeping-test-sql&gt;select sysdate from dual&lt;/house-keeping-test-sql&gt;
+	&lt;/<span class="hilite1">proxool</span>&gt;
+&lt;/something-else-entirely&gt; </pre>
+<p> </p>
+<p><strong><span style="font-size: small;">二、配置web.xml</span></strong><span style="color: rgb(0, 0, 0);"><br></span></p>
+<div class="dp-highlighter"><div class="bar"><div class="tools">Xml代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" flashvars="clipboard=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Cweb-app%20version%3D%222.4%22%20xmlns%3D%22http%3A%2F%2Fjava.sun.com%2Fxml%2Fns%2Fj2ee%22%0A%09xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%0A%09xsi%3AschemaLocation%3D%22http%3A%2F%2Fjava.sun.com%2Fxml%2Fns%2Fj2ee%20%0A%09http%3A%2F%2Fjava.sun.com%2Fxml%2Fns%2Fj2ee%2Fweb-app_2_4.xsd%22%3E%0A%3Cservlet%3E%0A%20%20%3Cservlet-name%3EServletConfigurator%3C%2Fservlet-name%3E%0A%20%20%3Cservlet-class%3E%0A%20%20%20%20org.logicalcobwebs.proxool.configuration.ServletConfigurator%0A%20%20%3C%2Fservlet-class%3E%0A%20%20%3Cinit-param%3E%0A%20%20%20%20%3Cparam-name%3ExmlFile%3C%2Fparam-name%3E%0A%20%20%20%20%3Cparam-value%3EWEB-INF%2Fproxool.xml%3C%2Fparam-value%3E%0A%20%20%3C%2Finit-param%3E%0A%20%20%3Cload-on-startup%3E1%3C%2Fload-on-startup%3E%0A%3C%2Fservlet%3E%0A%0A%3Cservlet%3E%0A%20%20%3Cservlet-name%3EAdmin%3C%2Fservlet-name%3E%0A%20%20%3Cservlet-class%3E%0A%20%20%20%20org.logicalcobwebs.proxool.admin.servlet.AdminServlet%0A%20%20%3C%2Fservlet-class%3E%0A%3C%2Fservlet%3E%0A%3Cservlet-mapping%3E%0A%20%20%3Cservlet-name%3EAdmin%3C%2Fservlet-name%3E%0A%20%20%3Curl-pattern%3E%2Fadmin%3C%2Furl-pattern%3E%0A%3C%2Fservlet-mapping%3E%0A%3C!--%20%E9%85%8D%E7%BD%AE%E5%8F%97%E4%BF%9D%E6%8A%A4%E5%9F%9F%EF%BC%8C%E5%8F%AA%E6%9C%89Tomcat%E7%AE%A1%E7%90%86%E5%91%98%E6%89%8D%E8%83%BD%E5%AF%9F%E7%9C%8B%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%9A%84%E4%BF%A1%E6%81%AF%20--%3E%0A%3Csecurity-constraint%3E%0A%20%20%3Cweb-resource-collection%3E%0A%20%20%20%20%20%20%3Cweb-resource-name%3Eproxool%3C%2Fweb-resource-name%3E%20%0A%20%20%20%20%20%20%3Curl-pattern%3E%2Fadmin%3C%2Furl-pattern%3E%0A%20%20%3C%2Fweb-resource-collection%3E%0A%20%20%3Cauth-constraint%3E%0A%20%20%20%20%20%3Crole-name%3Emanager%3C%2Frole-name%3E%20%0A%20%20%20%20%20%3C%2Fauth-constraint%3E%0A%20%20%3C%2Fsecurity-constraint%3E%0A%20%3Clogin-config%3E%0A%20%20%20%20%20%3Cauth-method%3EBASIC%3C%2Fauth-method%3E%20%0A%20%20%20%20%20%3Crealm-name%3Eproxool%20manager%20Application%3C%2Frealm-name%3E%20%0A%20%20%3C%2Flogin-config%3E%0A%20%20%3Csecurity-role%3E%0A%20%20%20%20%3Cdescription%3EThe%20role%20that%20is%20required%20to%20log%20in%20to%20the%20Manager%20Application%3C%2Fdescription%3E%20%0A%20%20%20%20%20%3Crole-name%3Emanager%3C%2Frole-name%3E%20%0A%20%3C%2Fsecurity-role%3E%0A%20%20%3Cerror-page%3E%0A%20%20%20%20%3Cerror-code%3E401%3C%2Ferror-code%3E%0A%20%20%20%20%3Clocation%3E%2F401.jsp%3C%2Flocation%3E%0A%20%20%3C%2Ferror-page%3E%0A%3C%2Fweb-app%3E" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" height="15" width="14"></div></div><ol class="dp-xml" start="1"><li><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span> </span><span class="attribute">version</span><span>=</span><span class="attribute-value">"1.0"</span><span> </span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">"UTF-8"</span><span class="tag">?&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;</span><span class="tag-name">web-app</span><span> </span><span class="attribute">version</span><span>=</span><span class="attribute-value">"2.4"</span><span> </span><span class="attribute">xmlns</span><span>=</span><span class="attribute-value">"http://java.sun.com/xml/ns/j2ee"</span><span>  </span></span></li><li><span>    <span class="attribute">xmlns:xsi</span><span>=</span><span class="attribute-value">"http://www.w3.org/2001/XMLSchema-instance"</span><span>  </span></span></li><li><span>    <span class="attribute">xsi:schemaLocation</span><span>="http://java.sun.com/xml/ns/j2ee   </span></span></li><li><span>    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"<span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>ServletConfigurator</span><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    org.logicalcobwebs.<span class="hilite1">proxool</span>.configuration.ServletConfigurator  </span></li><li><span>  <span class="tag">&lt;/</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>xmlFile</span><span class="tag">&lt;/</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>WEB-INF/<span class="hilite1">proxool</span>.xml</span><span class="tag">&lt;/</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;/</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">load-on-startup</span><span class="tag">&gt;</span><span>1</span><span class="tag">&lt;/</span><span class="tag-name">load-on-startup</span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  </span></li><li><span><span class="tag">&lt;</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>Admin</span><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    org.logicalcobwebs.<span class="hilite1">proxool</span>.admin.servlet.AdminServlet  </span></li><li><span>  <span class="tag">&lt;/</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>Admin</span><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>/admin</span><span class="tag">&lt;/</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="comments">&lt;!-- 配置受保护域，只有Tomcat管理员才能察看连接池的信息 --&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;</span><span class="tag-name">security-constraint</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">web-resource-collection</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>      <span class="tag">&lt;</span><span class="tag-name">web-resource-name</span><span class="tag">&gt;</span><span><span class="hilite1">proxool</span></span><span class="tag">&lt;/</span><span class="tag-name">web-resource-name</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>      <span class="tag">&lt;</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>/admin</span><span class="tag">&lt;/</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;/</span><span class="tag-name">web-resource-collection</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">auth-constraint</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>     <span class="tag">&lt;</span><span class="tag-name">role-name</span><span class="tag">&gt;</span><span>manager</span><span class="tag">&lt;/</span><span class="tag-name">role-name</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>     <span class="tag">&lt;/</span><span class="tag-name">auth-constraint</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;/</span><span class="tag-name">security-constraint</span><span class="tag">&gt;</span><span>  </span></span></li><li><span> <span class="tag">&lt;</span><span class="tag-name">login-config</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>     <span class="tag">&lt;</span><span class="tag-name">auth-method</span><span class="tag">&gt;</span><span>BASIC</span><span class="tag">&lt;/</span><span class="tag-name">auth-method</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>     <span class="tag">&lt;</span><span class="tag-name">realm-name</span><span class="tag">&gt;</span><span><span class="hilite1">proxool</span> manager Application</span><span class="tag">&lt;/</span><span class="tag-name">realm-name</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>  <span class="tag">&lt;/</span><span class="tag-name">login-config</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">security-role</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>The role that is required to log in to the Manager Application</span><span class="tag">&lt;/</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>   </span></span></li><li><span>     <span class="tag">&lt;</span><span class="tag-name">role-name</span><span class="tag">&gt;</span><span>manager</span><span class="tag">&lt;/</span><span class="tag-name">role-name</span><span class="tag">&gt;</span><span>   </span></span></li><li><span> <span class="tag">&lt;/</span><span class="tag-name">security-role</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;</span><span class="tag-name">error-page</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name">error-code</span><span class="tag">&gt;</span><span>401</span><span class="tag">&lt;/</span><span class="tag-name">error-code</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name">location</span><span class="tag">&gt;</span><span>/401.jsp</span><span class="tag">&lt;/</span><span class="tag-name">location</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>  <span class="tag">&lt;/</span><span class="tag-name">error-page</span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">web-app</span><span class="tag">&gt;</span><span>  </span></span></li></ol></div><pre style="display: none;" name="code" class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"&gt;
+&lt;servlet&gt;
+  &lt;servlet-name&gt;ServletConfigurator&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;
+    org.logicalcobwebs.<span class="hilite1">proxool</span>.configuration.ServletConfigurator
+  &lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;xmlFile&lt;/param-name&gt;
+    &lt;param-value&gt;WEB-INF/<span class="hilite1">proxool</span>.xml&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+
+&lt;servlet&gt;
+  &lt;servlet-name&gt;Admin&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;
+    org.logicalcobwebs.<span class="hilite1">proxool</span>.admin.servlet.AdminServlet
+  &lt;/servlet-class&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;Admin&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/admin&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+&lt;!-- 配置受保护域，只有Tomcat管理员才能察看连接池的信息 --&gt;
+&lt;security-constraint&gt;
+  &lt;web-resource-collection&gt;
+      &lt;web-resource-name&gt;<span class="hilite1">proxool</span>&lt;/web-resource-name&gt; 
+      &lt;url-pattern&gt;/admin&lt;/url-pattern&gt;
+  &lt;/web-resource-collection&gt;
+  &lt;auth-constraint&gt;
+     &lt;role-name&gt;manager&lt;/role-name&gt; 
+     &lt;/auth-constraint&gt;
+  &lt;/security-constraint&gt;
+ &lt;login-config&gt;
+     &lt;auth-method&gt;BASIC&lt;/auth-method&gt; 
+     &lt;realm-name&gt;<span class="hilite1">proxool</span> manager Application&lt;/realm-name&gt; 
+  &lt;/login-config&gt;
+  &lt;security-role&gt;
+    &lt;description&gt;The role that is required to log in to the Manager Application&lt;/description&gt; 
+     &lt;role-name&gt;manager&lt;/role-name&gt; 
+ &lt;/security-role&gt;
+  &lt;error-page&gt;
+    &lt;error-code&gt;401&lt;/error-code&gt;
+    &lt;location&gt;/401.jsp&lt;/location&gt;
+  &lt;/error-page&gt;
+&lt;/web-app&gt;</pre>
+<p><span style="color: rgb(0, 0, 0);">
+</span></p><p> </p>
+<p></p>
+<p> </p>
+<p> </p>
+<p><span style="font-size: small;"><span style="font-family: Verdana;"><strong><span style="font-family: Verdana;">ServletConfigurator</span>:</strong>加载并初始化<span class="hilite1">proxool</span>.xml文件,因为它是连接数据库的.其他很多模块都用到数据,所以必须首先加载它<br><strong>load-on-startup:</strong><span style="font-family: Verdana;">数值越小，就会先被加载初始化</span></span></span><span style="font-size: small;"><span style="font-family: Times New Roman;"><br></span><strong><span style="font-family: Verdana;">Admin:监控数据库连接池的连接情况</span></strong></span></p>
+<p><strong></strong></p>
+<p><strong><span style="font-size: small;">//获得数据库连接的语句</span></strong></p>
+<p><span style="font-size: small; color: rgb(255, 0, 0);">Connection conn=DriverManager.getConnection("<span class="hilite1">proxool</span>.dbname");</span></p>
+<p> </p>
+<p> </p>
+<p><span style="font-size: small;">注意:在401.jsp页面中必须加</span></p>
+<p><span style="font-size: small;">&lt;%<br>  response.setHeader("WWW-Authenticate", "Basic realm=\"Tomcat Manager Application\"");<br>%&gt;这句话，否则在访问/admin察看连接池信息时，会直接跳转到401.jsp页面。我们是想让访问admin/的用户必须输入用户名和密码，且必须是manager角色，三次输入不正确才会跳到401.jsp页面，如图</span></p>
+<p><span style="font-size: small;"><img src="/upload/picture/pic/34531/094e6c8c-0593-3c2a-8839-b61fa211f6a2.jpg" alt="" height="541" width="615"></span></p>
+<p><span style="font-size: small;">输入正确用户名和密码后才能看到<span class="hilite1">proxool</span>池的信息</span></p>
+<p><span style="font-size: small;"><img src="/upload/picture/pic/34529/d9240b55-37c3-3eac-83c1-cb6aeb6a61aa.jpg" alt="" height="512" width="576"> <br></span></p>
+<p><span style="font-size: small;"><strong>三、更详细的<span class="hilite1">proxool</span>.xml的配置属性说明:</strong> </span><span style="color: rgb(0, 0, 0);"><br><span style="font-size: small;"><img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"> </span></span></p>
+<div class="dp-highlighter"><div class="bar"><div class="tools">Xml代码 <embed src="/javascripts/syntaxhighlighter/clipboard_new.swf" flashvars="clipboard=%20%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22ISO-8859-1%22%3F%3E%0A%3C!--%0AProperties%20for%20Proxool%20Configurator%20testing.%20Defines%20the%20same%20parameters%20as%0ATestHelper.buildCompleteAlternativeProperties()%0A--%3E%0A%3Csomething-else-entirely%20xmlns%3D%22http%3A%2F%2Fsumthin.else.entirely%22%20xmlns%3Aproxool%3D%22The%20latest%20version%20is%20available%20at%20http%3A%2F%2Fproxool.sourceforge.net%2Fxml-namespace%22%3E%0A%20%20%20%20%3Cproxool%3Aproxool%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Aalias%3Exml-test-ns%3C%2Fproxool%3Aalias%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Adriver-url%3Ejdbc%3Ahsqldb%3Adb%2Ftest%3C%2Fproxool%3Adriver-url%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Adriver-class%3Eorg.hsqldb.jdbcDriver%3C%2Fproxool%3Adriver-class%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Adriver-properties%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aproperty%20name%3D%22user%22%20value%3D%22sa%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aproperty%20name%3D%22password%22%20value%3D%22%22%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2Fproxool%3Adriver-properties%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Ahouse-keeping-sleep-time%3E40000%3C%2Fproxool%3Ahouse-keeping-sleep-time%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Ahouse-keeping-test-sql%3Eselect%20CURRENT_DATE%3C%2Fproxool%3Ahouse-keeping-test-sql%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Amaximum-connection-count%3E10%3C%2Fproxool%3Amaximum-connection-count%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Aminimum-connection-count%3E3%3C%2Fproxool%3Aminimum-connection-count%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Amaximum-connection-lifetime%3E18000000%3C%2Fproxool%3Amaximum-connection-lifetime%3E%20%3C!--%205%20hours%20--%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Asimultaneous-build-throttle%3E5%3C%2Fproxool%3Asimultaneous-build-throttle%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Arecently-started-threshold%3E40000%3C%2Fproxool%3Arecently-started-threshold%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Aoverload-without-refusal-lifetime%3E50000%3C%2Fproxool%3Aoverload-without-refusal-lifetime%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Amaximum-active-time%3E60000%3C%2Fproxool%3Amaximum-active-time%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Averbose%3Etrue%3C%2Fproxool%3Averbose%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Atrace%3Etrue%3C%2Fproxool%3Atrace%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Afatal-sql-exception%3EFatal%20error%3C%2Fproxool%3Afatal-sql-exception%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Aprototype-count%3E2%3C%2Fproxool%3Aprototype-count%3E%0A%20%20%20%20%3C%2Fproxool%3Aproxool%3E%0A%20%20%20%20%3Cnothing-to-do-with-proxool%3E%0A%20%20%20%20%20%20%20%20%3Cproxool%3Aproxool%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aalias%3Exml-test-ns-2%3C%2Fproxool%3Aalias%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Adriver-url%3Ejdbc%3Ahsqldb%3Adb%2Ftest%3C%2Fproxool%3Adriver-url%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Adriver-class%3Eorg.hsqldb.jdbcDriver%3C%2Fproxool%3Adriver-class%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Adriver-properties%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aproperty%20name%3D%22user%22%20value%3D%22sa%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aproperty%20name%3D%22password%22%20value%3D%22%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fproxool%3Adriver-properties%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Ahouse-keeping-sleep-time%3E40000%3C%2Fproxool%3Ahouse-keeping-sleep-time%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Ahouse-keeping-test-sql%3Eselect%20CURRENT_DATE%3C%2Fproxool%3Ahouse-keeping-test-sql%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Amaximum-connection-count%3E10%3C%2Fproxool%3Amaximum-connection-count%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aminimum-connection-count%3E3%3C%2Fproxool%3Aminimum-connection-count%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Amaximum-connection-lifetime%3E18000000%3C%2Fproxool%3Amaximum-connection-lifetime%3E%20%3C!--%205%20hours%20--%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Asimultaneous-build-throttle%3E5%3C%2Fproxool%3Asimultaneous-build-throttle%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Arecently-started-threshold%3E40000%3C%2Fproxool%3Arecently-started-threshold%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aoverload-without-refusal-lifetime%3E50000%3C%2Fproxool%3Aoverload-without-refusal-lifetime%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Amaximum-active-time%3E60000%3C%2Fproxool%3Amaximum-active-time%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Averbose%3Etrue%3C%2Fproxool%3Averbose%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Atrace%3Etrue%3C%2Fproxool%3Atrace%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Afatal-sql-exception%3EFatal%20error%3C%2Fproxool%3Afatal-sql-exception%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cproxool%3Aprototype-count%3E2%3C%2Fproxool%3Aprototype-count%3E%0A%20%20%20%20%20%20%20%20%3C%2Fproxool%3Aproxool%3E%0A%20%20%20%20%3C%2Fnothing-to-do-with-proxool%3E%0A%3C%2Fsomething-else-entirely%3E" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" height="15" width="14"></div></div><ol class="dp-xml" start="1"><li><span><span> </span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span> </span><span class="attribute">version</span><span>=</span><span class="attribute-value">"1.0"</span><span> </span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">"ISO-8859-1"</span><span class="tag">?&gt;</span><span>  </span></span></li><li><span>&lt;!--  </span></li><li><span>Properties for <span class="hilite1">Proxool</span> Configurator testing. Defines the same parameters as  </span></li><li><span>TestHelper.buildCompleteAlternativeProperties()  </span></li><li><span>--<span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;</span><span class="tag-name">something-else-entirely</span><span> </span><span class="attribute">xmlns</span><span>=</span><span class="attribute-value">"http://sumthin.else.entirely"</span><span> </span><span class="attribute">xmlns:<span class="hilite1">proxool</span></span><span>=</span><span class="attribute-value">"The latest version is available at http://<span class="hilite1">proxool</span>.sourceforge.net/xml-namespace"</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:<span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:alias</span><span class="tag">&gt;</span><span>xml-test-ns</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:alias</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-url</span><span class="tag">&gt;</span><span>jdbc:hsqldb:db/test</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-url</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-class</span><span class="tag">&gt;</span><span>org.hsqldb.jdbcDriver</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-class</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-properties</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"user"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"sa"</span><span class="tag">/&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"password"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">""</span><span class="tag">/&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-properties</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-sleep-time</span><span class="tag">&gt;</span><span>40000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-sleep-time</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-test-sql</span><span class="tag">&gt;</span><span>select CURRENT_DATE</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-test-sql</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-count</span><span class="tag">&gt;</span><span>10</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-count</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:minimum-connection-count</span><span class="tag">&gt;</span><span>3</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:minimum-connection-count</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-lifetime</span><span class="tag">&gt;</span><span>18000000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-lifetime</span><span class="tag">&gt;</span><span> </span><span class="comments">&lt;!-- 5 hours --&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:simultaneous-build-throttle</span><span class="tag">&gt;</span><span>5</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:simultaneous-build-throttle</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:recently-started-threshold</span><span class="tag">&gt;</span><span>40000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:recently-started-threshold</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:overload-without-refusal-lifetime</span><span class="tag">&gt;</span><span>50000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:overload-without-refusal-lifetime</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-active-time</span><span class="tag">&gt;</span><span>60000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-active-time</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:verbose</span><span class="tag">&gt;</span><span>true</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:verbose</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:trace</span><span class="tag">&gt;</span><span>true</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:trace</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:fatal-sql-exception</span><span class="tag">&gt;</span><span>Fatal error</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:fatal-sql-exception</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:prototype-count</span><span class="tag">&gt;</span><span>2</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:prototype-count</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:<span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;</span><span class="tag-name">nothing-to-do-with-<span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:<span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:alias</span><span class="tag">&gt;</span><span>xml-test-ns-2</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:alias</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-url</span><span class="tag">&gt;</span><span>jdbc:hsqldb:db/test</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-url</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-class</span><span class="tag">&gt;</span><span>org.hsqldb.jdbcDriver</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-class</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-properties</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>                <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"user"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"sa"</span><span class="tag">/&gt;</span><span>  </span></span></li><li><span>                <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"password"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">""</span><span class="tag">/&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:driver-properties</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-sleep-time</span><span class="tag">&gt;</span><span>40000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-sleep-time</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-test-sql</span><span class="tag">&gt;</span><span>select CURRENT_DATE</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:house-keeping-test-sql</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-count</span><span class="tag">&gt;</span><span>10</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-count</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:minimum-connection-count</span><span class="tag">&gt;</span><span>3</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:minimum-connection-count</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-lifetime</span><span class="tag">&gt;</span><span>18000000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-connection-lifetime</span><span class="tag">&gt;</span><span> </span><span class="comments">&lt;!-- 5 hours --&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:simultaneous-build-throttle</span><span class="tag">&gt;</span><span>5</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:simultaneous-build-throttle</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:recently-started-threshold</span><span class="tag">&gt;</span><span>40000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:recently-started-threshold</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:overload-without-refusal-lifetime</span><span class="tag">&gt;</span><span>50000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:overload-without-refusal-lifetime</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-active-time</span><span class="tag">&gt;</span><span>60000</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:maximum-active-time</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:verbose</span><span class="tag">&gt;</span><span>true</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:verbose</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:trace</span><span class="tag">&gt;</span><span>true</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:trace</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:fatal-sql-exception</span><span class="tag">&gt;</span><span>Fatal error</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:fatal-sql-exception</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>            <span class="tag">&lt;</span><span class="tag-name"><span class="hilite1">proxool</span>:prototype-count</span><span class="tag">&gt;</span><span>2</span><span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:prototype-count</span><span class="tag">&gt;</span><span>  </span></span></li><li><span>        <span class="tag">&lt;/</span><span class="tag-name"><span class="hilite1">proxool</span>:<span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span>    <span class="tag">&lt;/</span><span class="tag-name">nothing-to-do-with-<span class="hilite1">proxool</span></span><span class="tag">&gt;</span><span>  </span></span></li><li><span><span class="tag">&lt;/</span><span class="tag-name">something-else-entirely</span><span class="tag">&gt;</span><span>  </span></span></li></ol></div><pre style="display: none;" name="code" class="xml"> &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!--
+Properties for <span class="hilite1">Proxool</span> Configurator testing. Defines the same parameters as
+TestHelper.buildCompleteAlternativeProperties()
+--&gt;
+&lt;something-else-entirely xmlns="http://sumthin.else.entirely" xmlns:<span class="hilite1">proxool</span>="The latest version is available at http://<span class="hilite1">proxool</span>.sourceforge.net/xml-namespace"&gt;
+    &lt;<span class="hilite1">proxool</span>:<span class="hilite1">proxool</span>&gt;
+        &lt;<span class="hilite1">proxool</span>:alias&gt;xml-test-ns&lt;/<span class="hilite1">proxool</span>:alias&gt;
+        &lt;<span class="hilite1">proxool</span>:driver-url&gt;jdbc:hsqldb:db/test&lt;/<span class="hilite1">proxool</span>:driver-url&gt;
+        &lt;<span class="hilite1">proxool</span>:driver-class&gt;org.hsqldb.jdbcDriver&lt;/<span class="hilite1">proxool</span>:driver-class&gt;
+        &lt;<span class="hilite1">proxool</span>:driver-properties&gt;
+            &lt;<span class="hilite1">proxool</span>:property name="user" value="sa"/&gt;
+            &lt;<span class="hilite1">proxool</span>:property name="password" value=""/&gt;
+        &lt;/<span class="hilite1">proxool</span>:driver-properties&gt;
+        &lt;<span class="hilite1">proxool</span>:house-keeping-sleep-time&gt;40000&lt;/<span class="hilite1">proxool</span>:house-keeping-sleep-time&gt;
+        &lt;<span class="hilite1">proxool</span>:house-keeping-test-sql&gt;select CURRENT_DATE&lt;/<span class="hilite1">proxool</span>:house-keeping-test-sql&gt;
+        &lt;<span class="hilite1">proxool</span>:maximum-connection-count&gt;10&lt;/<span class="hilite1">proxool</span>:maximum-connection-count&gt;
+        &lt;<span class="hilite1">proxool</span>:minimum-connection-count&gt;3&lt;/<span class="hilite1">proxool</span>:minimum-connection-count&gt;
+        &lt;<span class="hilite1">proxool</span>:maximum-connection-lifetime&gt;18000000&lt;/<span class="hilite1">proxool</span>:maximum-connection-lifetime&gt; &lt;!-- 5 hours --&gt;
+        &lt;<span class="hilite1">proxool</span>:simultaneous-build-throttle&gt;5&lt;/<span class="hilite1">proxool</span>:simultaneous-build-throttle&gt;
+        &lt;<span class="hilite1">proxool</span>:recently-started-threshold&gt;40000&lt;/<span class="hilite1">proxool</span>:recently-started-threshold&gt;
+        &lt;<span class="hilite1">proxool</span>:overload-without-refusal-lifetime&gt;50000&lt;/<span class="hilite1">proxool</span>:overload-without-refusal-lifetime&gt;
+        &lt;<span class="hilite1">proxool</span>:maximum-active-time&gt;60000&lt;/<span class="hilite1">proxool</span>:maximum-active-time&gt;
+        &lt;<span class="hilite1">proxool</span>:verbose&gt;true&lt;/<span class="hilite1">proxool</span>:verbose&gt;
+        &lt;<span class="hilite1">proxool</span>:trace&gt;true&lt;/<span class="hilite1">proxool</span>:trace&gt;
+        &lt;<span class="hilite1">proxool</span>:fatal-sql-exception&gt;Fatal error&lt;/<span class="hilite1">proxool</span>:fatal-sql-exception&gt;
+        &lt;<span class="hilite1">proxool</span>:prototype-count&gt;2&lt;/<span class="hilite1">proxool</span>:prototype-count&gt;
+    &lt;/<span class="hilite1">proxool</span>:<span class="hilite1">proxool</span>&gt;
+    &lt;nothing-to-do-with-<span class="hilite1">proxool</span>&gt;
+        &lt;<span class="hilite1">proxool</span>:<span class="hilite1">proxool</span>&gt;
+            &lt;<span class="hilite1">proxool</span>:alias&gt;xml-test-ns-2&lt;/<span class="hilite1">proxool</span>:alias&gt;
+            &lt;<span class="hilite1">proxool</span>:driver-url&gt;jdbc:hsqldb:db/test&lt;/<span class="hilite1">proxool</span>:driver-url&gt;
+            &lt;<span class="hilite1">proxool</span>:driver-class&gt;org.hsqldb.jdbcDriver&lt;/<span class="hilite1">proxool</span>:driver-class&gt;
+            &lt;<span class="hilite1">proxool</span>:driver-properties&gt;
+                &lt;<span class="hilite1">proxool</span>:property name="user" value="sa"/&gt;
+                &lt;<span class="hilite1">proxool</span>:property name="password" value=""/&gt;
+            &lt;/<span class="hilite1">proxool</span>:driver-properties&gt;
+            &lt;<span class="hilite1">proxool</span>:house-keeping-sleep-time&gt;40000&lt;/<span class="hilite1">proxool</span>:house-keeping-sleep-time&gt;
+            &lt;<span class="hilite1">proxool</span>:house-keeping-test-sql&gt;select CURRENT_DATE&lt;/<span class="hilite1">proxool</span>:house-keeping-test-sql&gt;
+            &lt;<span class="hilite1">proxool</span>:maximum-connection-count&gt;10&lt;/<span class="hilite1">proxool</span>:maximum-connection-count&gt;
+            &lt;<span class="hilite1">proxool</span>:minimum-connection-count&gt;3&lt;/<span class="hilite1">proxool</span>:minimum-connection-count&gt;
+            &lt;<span class="hilite1">proxool</span>:maximum-connection-lifetime&gt;18000000&lt;/<span class="hilite1">proxool</span>:maximum-connection-lifetime&gt; &lt;!-- 5 hours --&gt;
+            &lt;<span class="hilite1">proxool</span>:simultaneous-build-throttle&gt;5&lt;/<span class="hilite1">proxool</span>:simultaneous-build-throttle&gt;
+            &lt;<span class="hilite1">proxool</span>:recently-started-threshold&gt;40000&lt;/<span class="hilite1">proxool</span>:recently-started-threshold&gt;
+            &lt;<span class="hilite1">proxool</span>:overload-without-refusal-lifetime&gt;50000&lt;/<span class="hilite1">proxool</span>:overload-without-refusal-lifetime&gt;
+            &lt;<span class="hilite1">proxool</span>:maximum-active-time&gt;60000&lt;/<span class="hilite1">proxool</span>:maximum-active-time&gt;
+            &lt;<span class="hilite1">proxool</span>:verbose&gt;true&lt;/<span class="hilite1">proxool</span>:verbose&gt;
+            &lt;<span class="hilite1">proxool</span>:trace&gt;true&lt;/<span class="hilite1">proxool</span>:trace&gt;
+            &lt;<span class="hilite1">proxool</span>:fatal-sql-exception&gt;Fatal error&lt;/<span class="hilite1">proxool</span>:fatal-sql-exception&gt;
+            &lt;<span class="hilite1">proxool</span>:prototype-count&gt;2&lt;/<span class="hilite1">proxool</span>:prototype-count&gt;
+        &lt;/<span class="hilite1">proxool</span>:<span class="hilite1">proxool</span>&gt;
+    &lt;/nothing-to-do-with-<span class="hilite1">proxool</span>&gt;
+&lt;/something-else-entirely&gt;</pre>
+<p><strong><span style="font-size: small;">属性列表说明:</span></strong></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">fatal-sql-exception</span>:</strong>
+它是一个逗号分割的信息片段.当一个SQL异常发生时,他的异常信息将与这个信息片段进行比较.如果在片段中存在,那么这个异常将被认为是个致命错误
+(Fatal SQL Exception
+).这种情况下,数据库连接将要被放弃.无论发生什么,这个异常将会被重掷以提供给消费者.用户最好自己配置一个不同的异常来抛出.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">fatal-sql-exception-wrapper-class</span>:</strong>正如上面所说,你最好配置一个不同的异常来重掷.利用这个属性,用户可以包装SQLException,使他变成另外一个异常.这个异常或者继承SQLException或者继承字RuntimeException.<span class="hilite1">proxool</span>自带了2个实现:'org.logicalcobwebs.<span class="hilite1">proxool</span>.FatalSQLException' 和'org.logicalcobwebs.<span class="hilite1">proxool</span>.FatalRuntimeException' .后者更合适.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">house-keeping-sleep-time</span>: house keeper</strong> 保留线程处于睡眠状态的最长时间,house keeper 的职责就是检查各个连接的状态,并判断是否需要销毁或者创建.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">house-keeping-test-sql</span>:</strong>  如果发现了空闲的数据库连接.house keeper 将会用这个语句来测试.这个语句最好非常快的被执行.如果没有定义,测试过程将会被忽略。</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">injectable-connection-interface</span>:</strong> 允许<span class="hilite1">proxool</span>实现被代理的connection对象的方法.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">injectable-statement-interface</span>:</strong> 允许<span class="hilite1">proxool</span>实现被代理的Statement 对象方法.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">injectable-prepared-statement-interface</span>:</strong> 允许<span class="hilite1">proxool</span>实现被代理的PreparedStatement 对象方法.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">injectable-callable-statement-interface</span>:</strong> 允许<span class="hilite1">proxool</span>实现被代理的CallableStatement 对象方法.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">jmx</span>:</strong> 略</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">jmx-agent-id</span>:</strong> 略</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">jndi-name</span>:</strong> 数据源的名称</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">maximum-active-time</span>:</strong> 如果housekeeper 检测到某个线程的活动时间大于这个数值.它将会杀掉这个线程.所以确认一下你的服务器的带宽.然后定一个合适的值.默认是5分钟.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">maximum-connection-count</span>:</strong> 最大的数据库连接数.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">maximum-connection-lifetime</span>:</strong> 一个线程的最大寿命.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">minimum-connection-count</span>:</strong> 最小的数据库连接数</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">overload-without-refusal-lifetime</span>:</strong> 略</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">prototype-count</span>:</strong>
+连接池中可用的连接数量.如果当前的连接池中的连接少于这个数值.新的连接将被建立(假设没有超过最大可用数).例如.我们有3个活动连接2个可用连接,
+而我们的prototype-count是4,那么数据库连接池将试图建立另外2个连接.这和
+minimum-connection-count不同.
+minimum-connection-count把活动的连接也计算在内.prototype-count 是spare connections
+的数量.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">recently-started-threshold</span>:</strong>  略</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">simultaneous-build-throttle</span>:</strong>  略</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">statistics</span>: </strong> 连接池使用状况统计。 参数“10s,1m,1d”</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">statistics-log-level</span>:</strong>  日志统计跟踪类型。 参数“ERROR”或 “INFO”</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">test-before-use</span>:</strong> 略</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">test-after-use</span>:</strong> 略</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">trace</span>:</strong> 如果为true,那么每个被执行的SQL语句将会在执行期被log记录(DEBUG LEVEL).你也可以注册一个ConnectionListener (参看ProxoolFacade)得到这些信息.</span></p>
+<p><span style="font-size: small;"><strong><span style="color: rgb(255, 0, 0);">verbose</span>:</strong> 详细信息设置。 参数 bool 值</span></p>
+<p><span style="font-size: small;"> </span></p>
+  </div>
+
+  
+
+  
+  
+  <div id="digg_bottom" class="clearfix"><a href="#" onclick='digg("blogs", 359570, false);return false;'><div><strong>5</strong> <br>顶</div></a><a href="#" onclick='digg("blogs", 359570, true);return false;'><div><strong>3</strong> <br>踩</div></a></div>
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/383613" class="next" title="处理超出打开游标的最大数异常">处理超出打开游标的最大数异常</a>
+      |
+      <a href="/blog/354330" class="pre" title="用Java解析GPS经纬度">用Java解析GPS经纬度</a>
+    </div>
+  </div>
+
+  <div class="blog_bottom">
+    <ul>
+      <li>09:48</li>
+      <li>浏览 (2377)</li>
+            <li><a href="#comments">评论</a> (1)</li>
+      <li>分类: <a href="/category/27459">Java</a></li>
+      
+      
+      
+      <li class="last"><a href="http://www.javaeye.com/wiki/topic/359570" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    <div id="bc1299177">
+  <div class="comment_title">
+    1 楼
+    <a href="http://pptztf.javaeye.com" target="_blank">pptztf</a>
+    2009-12-18  
+    <a href="#" onclick="quote_comment(1299177);return false;">引用</a>
+    
+  </div>
+  <div class="comment_content">非常非常的感谢，你帮我大忙了，，，</div>
+</div>
+
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+          
+      
+        <form action="/blog/359570" id="comment_form" method="post" onsubmit="return false;">          
+
+
+  <input value="true" id="editor_bbcode_flag" type="hidden">
+
+
+
+<div id="editor_main"><div class="clearfix" id="editor_wrapper"><div id="bbcode_emotions"><h5>表情图标</h5><img src="http://www.javaeye.com/images/smiles/icon_biggrin.gif"><img src="http://www.javaeye.com/images/smiles/icon_smile.gif"><img src="http://www.javaeye.com/images/smiles/icon_sad.gif"><img src="http://www.javaeye.com/images/smiles/icon_surprised.gif"><img src="http://www.javaeye.com/images/smiles/icon_eek.gif"><img src="http://www.javaeye.com/images/smiles/icon_confused.gif"><img src="http://www.javaeye.com/images/smiles/icon_cool.gif"><img src="http://www.javaeye.com/images/smiles/icon_lol.gif"><img src="http://www.javaeye.com/images/smiles/icon_mad.gif"><img src="http://www.javaeye.com/images/smiles/icon_razz.gif"><img src="http://www.javaeye.com/images/smiles/icon_redface.gif"><img src="http://www.javaeye.com/images/smiles/icon_cry.gif"><img src="http://www.javaeye.com/images/smiles/icon_evil.gif"><img src="http://www.javaeye.com/images/smiles/icon_twisted.gif"><img src="http://www.javaeye.com/images/smiles/icon_rolleyes.gif"><img src="http://www.javaeye.com/images/smiles/icon_wink.gif"><img src="http://www.javaeye.com/images/smiles/icon_exclaim.gif"><img src="http://www.javaeye.com/images/smiles/icon_question.gif"><img src="http://www.javaeye.com/images/smiles/icon_idea.gif"><img src="http://www.javaeye.com/images/smiles/icon_arrow.gif"></div><div id="bbcode_controllers"><div id="bbcode_toolbar"><input id="button_bold" value="B" type="button"><input id="button_italic" value="I" type="button"><input id="button_underline" value="U" type="button"><input value="Quote" type="button"><input value="Code" type="button"><input value="List" type="button"><input value="Img" type="button"><input value="URL" type="button"><input value="Flash" type="button"><input value="Table" type="button"><br>字体颜色: <select id="select_color"><option value="black" style="color: black;">标准</option><option value="darkred" style="color: darkred;">深红</option><option value="red" style="color: red;">红色</option><option value="orange" style="color: orange;">橙色</option><option value="brown" style="color: brown;">棕色</option><option value="yellow" style="color: yellow;">黄色</option><option value="green" style="color: green;">绿色</option><option value="olive" style="color: olive;">橄榄</option><option value="cyan" style="color: cyan;">青色</option><option value="blue" style="color: blue;">蓝色</option><option value="darkblue" style="color: darkblue;">深蓝</option><option value="indigo" style="color: indigo;">靛蓝</option><option value="violet" style="color: violet;">紫色</option><option value="gray" style="color: gray;">灰色</option><option value="white" style="color: white;">白色</option><option value="black" style="color: black;">黑色</option></select> 字体大小: <select id="select_font"><option value="0">标准</option><option value="xx-small">1 (xx-small)</option><option value="x-small">2 (x-small)</option><option value="small">3 (small)</option><option value="medium">4 (medium)</option><option value="large">5 (large)</option><option value="x-large">6 (x-large)</option><option value="xx-large">7 (xx-large)</option></select> 对齐: <select id="select_align"><option value="0">标准</option><option value="left">居左</option><option value="center">居中</option><option value="right">居右</option></select></div><div id="bbcode_tooltip">提示：选择您需要装饰的文字, 按上列按钮即可添加上相应的标签</div><textarea class="validate-richeditor bad-words min-length-5" cols="40" id="editor_body" name="comment[body]" rows="20" style="width: 500px; height: 350px;"></textarea></div></div></div>
+
+
+<script type="text/javascript">
+  var editor = new Control.TextArea.Editor("editor_body", "bbcode", false);
+</script>
+          <p style="text-align: right; padding-right: 30px;">您还没有登录，请<a href="/login">登录</a>后发表评论(快捷键 Alt+S / Ctrl+Enter) <input class="submit" id="quick_reply_button" name="commit" value="提交" type="submit"></p>
+        </form>
+        <script type="text/javascript">
+          new HotKey("s",function() {$('quick_reply_button').click();},{altKey: true, ctrlKey: false});
+          new HotKey(new Number(13),function() {$('quick_reply_button').click();},{altKey: false, ctrlKey: true});
+
+          new Validation("comment_form", {immediate: false, onFormValidate: function(result, form){
+    
+            if(confirm('您需要登录以后才能执行这个操作，现在要登录吗？')) window.location.href = '/login';
+    
+        }});
+        </script>
+      
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.blog_content img'), 700);
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'Post'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);}
+    });
+  }
+</script>
+
+
+
+<script src="http://www.javaeye.com/javascripts/se_hilite.js?1224057847" type="text/javascript"></script>
+<script type="text/javascript">
+document.observe('dom:loaded',function() {
+  Hilite.hiliteElement($("main"), "proxool");
+      document.body.appendChild($('search_engine_box').remove());
+      $('search_engine_box').appear();
+});
+</script>
+      
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+            <div id="blog_owner_logo"><a href="http://sunnylocus.javaeye.com"><img alt="sunnylocus的博客" class="logo" src="http://www.javaeye.com/upload/logo/user/142097/a256cbfe-6dcb-31ce-a8c5-3bc48b3567e8.jpg?1251885104" title="sunnylocus的博客: sunnylocus's blog"></a></div>
+            <div id="blog_owner_name">sunnylocus</div>
+          </div>
+          
+            <div id="twitter_decorate"> </div>
+            <div id="twitter" class="twitter clearfix">
+              
+开始啃petri网工作流！
+<br><em><a href="http://sunnylocus.javaeye.com/blog/chat/55906">17 小时前</a>
+ 通过网页
+ 
+</em>
+       
+              <div class="right"><a href="/blog/chat">&gt;&gt;更多闲聊</a></div>
+            </div>
+          
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 34160 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.javaeye.com/images/icon_minigender_1.gif?1192779195" title="男"></li>
+              <li>来自: 上海</li>
+              <li><a href="/blog/445704" target="_blank" title="我正在读《中国联通SP业务接入开发总结(SGIP1.2 协议)》"><img src="/images/status/blog_show.gif"></a></li>
+              <li>
+                <a href="/blog/profile" class="profile">详细资料</a>
+                <a href="/blog/guest_book" class="guest_book">留言簿</a>
+              </li>
+              
+            </ul>
+            <h5>搜索本博客</h5>
+            <form action="/blog/search" method="get">              <input class="text" id="query" name="query" style="margin-left: 10px; width: 110px;" type="text">
+              <input class="submit" value="搜索" type="submit">
+            </form>          </div>
+          
+            <div id="user_visits" class="clearfix">
+              <h5>最近访客 <span style="font-weight: normal; font-size: 12px; padding-left: 30px;"><a href="/blog/user_visits">&gt;&gt;更多访客</a></span></h5>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://ibadboy.javaeye.com" target="_blank"><img alt="ibadboy的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="ibadboy的博客: "></a></div>
+                  <div class="left"><a href="http://ibadboy.javaeye.com" target="_blank">ibadboy</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://wangwt888-163-com.javaeye.com" target="_blank"><img alt="eye晨曦的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="eye晨曦的博客: "></a></div>
+                  <div class="left"><a href="http://wangwt888-163-com.javaeye.com" target="_blank">eye晨曦</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://wrf7418106.javaeye.com" target="_blank"><img alt="wrf7418106的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="wrf7418106的博客: "></a></div>
+                  <div class="left"><a href="http://wrf7418106.javaeye.com" target="_blank">wrf7418106</a></div>
+                </div>
+              
+                <div class="user_visit">
+                  <div class="logo"><a href="http://fjiswell.javaeye.com" target="_blank"><img alt="fjiswell的博客" class="logo" src="http://www.javaeye.com/images/user-logo-thumb.gif?1194185304" title="fjiswell的博客: "></a></div>
+                  <div class="left"><a href="http://fjiswell.javaeye.com" target="_blank">fjiswell</a></div>
+                </div>
+              
+            </div>
+          
+                      <div id="blog_menu">
+              <h5>博客分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (57)</a></li>
+                
+                  <li><a href="/category/27459">Java (36)</a></li>
+                
+                  <li><a href="/category/27466">Linux系统 (13)</a></li>
+                
+                  <li><a href="/category/80220">JS (1)</a></li>
+                
+                  <li><a href="/category/80816">WEB容器 (1)</a></li>
+                
+                  <li><a href="/category/82294">人生旅程 (0)</a></li>
+                
+              </ul>
+            </div>
+            
+              <div id="blog_album">
+                <h5>我的相册</h5>
+                <div class="picture_thumb" style="float: none;">
+                  <div><span class="thumb_box"><a href="/album"><img src="http://dl.javaeye.com/upload/picture/pic/49543/f10d5260-77a6-3c2c-9e8a-b90dd0b2cf51-thumb.jpg"></a></span></div>
+                  <span>sendrecSeq<br> <a href="/album">共 43 张</a></span>
+                </div>
+              </div>
+            
+            
+              <div id="guest_books">
+                <h5>我的留言簿 <span style="font-weight: normal; font-size: 12px; padding-left: 20px;"><a href="/blog/guest_book">&gt;&gt;更多留言</a></span></h5>
+                <ul>
+                  
+                    <li>
+                      sunnylocus 写道呵呵，济南的美女程序员 好厉害O(∩_∩)O哈哈~，没有 ...<br>
+                      -- by <a href="/blog/guest_book#10805">catlovefox</a>
+                    </li>
+                  
+                </ul>
+              </div>
+            
+            <div id="blog_others">
+              <h5>其他分类</h5>
+              <ul>
+                <li><a href="/blog/favorite">我的收藏</a> (3)</li>
+                                                <li><a href="/blog/forum">我的论坛帖子</a> (13)</li>
+                <li><a href="/blog/article">我的精华良好贴</a> (0)</li>
+                              </ul>
+            </div>
+            
+            <div id="recent_groups">
+              <h5>最近加入圈子</h5>
+              <ul>
+                
+                  <li><a href="http://jbpm.group.javaeye.com">JBPM @net</a></li>
+                
+                  <li><a href="http://jinan.group.javaeye.com">济南JavaEyer群</a></li>
+                
+                  <li><a href="http://JSFgroup.group.javaeye.com">JSF</a></li>
+                
+                  <li><a href="http://english.group.javaeye.com">英语学习</a></li>
+                
+              </ul>
+            </div>
+            
+            
+                          <div id="month_blogs">
+                <h5>存档</h5>
+                <ul>
+                  
+                    <li><a href="/blog/monthblog/2009-12">2009-12</a> (2)</li>
+                  
+                    <li><a href="/blog/monthblog/2009-11">2009-11</a> (8)</li>
+                  
+                    <li><a href="/blog/monthblog/2009-10">2009-10</a> (2)</li>
+                  
+                  <li><a href="/blog/monthblog_more">更多存档...</a></li>
+                </ul>
+              </div>
+                        <div id="recent_comments">
+              <h5>最新评论</h5>
+              <ul>
+                
+                  <li>
+                    <a href="/blog/359570#comments" title="proxool详细配置">proxool详细配置</a><br>
+                    非常非常的感谢，你帮我大忙了，，，<br>
+                    -- by <a href="http://pptztf.javaeye.com" target="_blank">pptztf</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/223327#comments" title="创建Java线程池">创建Java线程池</a><br>
+                    only_java 写道可以自动或手动设置线程数量,么体现出来啊？
+自动设置线程数 ...<br>
+                    -- by <a href="http://sunnylocus.javaeye.com" target="_blank">sunnylocus</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/493627#comments" title="FTP文件上传">FTP文件上传</a><br>
+                    用Apache的commons-net更方便一些<br>
+                    -- by <a href="http://peak.javaeye.com" target="_blank">peak</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/215993#comments" title="MyEclipse优化技巧">MyEclipse优化技巧</a><br>
+                    确实 快了很多 <br>
+                    -- by <a href="http://javaalpha.javaeye.com" target="_blank">javaAlpha</a>
+                  </li>
+                
+                  <li>
+                    <a href="/blog/223327#comments" title="创建Java线程池">创建Java线程池</a><br>
+                    可以自动或手动设置线程数量,么体现出来啊？<br>
+                    -- by <a href="http://only-java.javaeye.com" target="_blank">only_java</a>
+                  </li>
+                
+              </ul>
+            </div>
+            <div id="comments_top">
+              <h5>评论排行榜</h5>
+              <ul>
+                
+                  <li><a href="/blog/342996" title="Servlet生命周期">Servlet生命周期</a></li>
+                
+                  <li><a href="/blog/403804" title="Java异常处理">Java异常处理</a></li>
+                
+                  <li><a href="/blog/432648" title="对PreparedStatement、Statement的一点总结">对PreparedStatement、Statement的一点总 ...</a></li>
+                
+                  <li><a href="/blog/493627" title="FTP文件上传">FTP文件上传</a></li>
+                
+                  <li><a href="/blog/359570" title="proxool详细配置">proxool详细配置</a></li>
+                
+              </ul>
+            </div>
+            <div id="rss">
+              <ul>
+                <li><a href="/rss" target="_blank"><img alt="Rss" src="http://www.javaeye.com/images/rss.png?1195448807"></a></li>
+                <li><a href="http://fusion.google.com/add?feedurl=http://sunnylocus.javaeye.com/rss" target="_blank"><img alt="Rss_google" src="http://www.javaeye.com/images/rss_google.gif?1197872161"></a></li>
+                <li><a href="http://www.zhuaxia.com/add_channel.php?url=http://sunnylocus.javaeye.com/rss" target="_blank"><img alt="Rss_zhuaxia" src="http://www.javaeye.com/images/rss_zhuaxia.gif?1197872161"></a></li>
+                <li><a href="http://www.xianguo.com/subscribe.php?url=http://sunnylocus.javaeye.com/rss" target="_blank"><img alt="Rss_xianguo" src="http://www.javaeye.com/images/rss_xianguo.jpg?1206446465"></a></li>
+                <li><a href="http://www.google.com/search?hl=zh-CN&amp;q=RSS">[什么是RSS?]</a></li>
+              </ul>
+            </div>
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr>
+          声明：JavaEye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br>
+          © 2003-2009 JavaEye.com.   All rights reserved. 上海炯耐计算机软件有限公司 [ 沪ICP备05023328号 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.javaeye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&logged_in=no" + "' width='0' height='0' />");
+</script><img src="http://stat.javaeye.com/?url=http%3A%2F%2Fsunnylocus.javaeye.com%2Fblog%2F359570&amp;referrer=http%3A%2F%2Fwww.google.cn%2Fsearch%3Fhl%3Dzh-CN%26rlz%3D1G1GGLQ_ZH-CNCN357%26newwindow%3D1%26q%3Dproxool%26btnG%3DGoogle%2B%25E6%2590%259C%25E7%25B4%25A2%26aq%3Df%26oq%3D&amp;logged_in=no" height="0" width="0">
+    
+  <div id="search_engine_box" style="">
+<h2>您正在搜索 proxool <a href="#" onclick="$('search_engine_box').hide();return false;">[ X ]</a></h2>
+<div>
+关键字已在页面上高亮显示<br>
+您可能对下列文章也感兴趣<ul><li><a href="http://www.javaeye.com/topic/423318" title="hibernate+proxool" target="_blank">hibernate+proxool</a></li><li><a href="http://www.javaeye.com/topic/101359" title="Proxool连接池的怪问题" target="_blank">Proxool连接池的怪问题</a></li><li><a href="http://www.javaeye.com/topic/170639" title="spring中dbcp更换为proxool" target="_blank">spring中dbcp更换为proxool</a></li><li><a href="http://www.javaeye.com/topic/540166" title="proxool连接池配置详细说明" target="_blank">proxool连接池配置详细说明</a></li><li><a href="http://www.javaeye.com/topic/95235" title="Proxool Connection Pool 问题" target="_blank">Proxool Connection Pool 问题</a></li></ul>
+<a href="#" onclick="var f = document.createElement('form'); f.target = '_blank'; f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = 'http://www.javaeye.com/search?type=all';var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'query'); m.setAttribute('value', 'proxool'); f.appendChild(m);f.submit();return false;">站内搜索更多 proxool</a>
+</div>
+</div></body></html>

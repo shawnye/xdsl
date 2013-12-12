@@ -1,0 +1,321 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%@taglib prefix="tags" tagdir="/WEB-INF/tags"%>
+<c:set var="ctx" value="${ pageContext.request.contextPath }"/>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>宽带/语音资源系统--主页</title>
+<tags:head></tags:head>
+
+<style type="text/css">
+.header{
+		background-color: #C8D1D2;
+		font-weight: bold;
+		width: 100%;
+		border-collapse: collapse;
+}
+	.menu_area{
+		text-align: left;
+	}
+
+.summary{
+	font-size: smaller;
+	color: gray;
+	margin-left: 2em;
+}
+</style>
+<script type="text/javascript">
+//collect columnsDisplayed
+function getColumnConfig(){
+	var s = '';
+	$("input[id$=_checkbox]").each(function(i, n){
+		var id = $(this).attr('id');
+		var checked = $(this).attr('checked');
+		s += id + ':' + (checked?1:0) + ';' ;
+	});
+	return s;
+}  
+	  
+	$(function(){
+		var ck = $.cookie('xdsl_main_config');//初始化 
+		if(ck){
+ 			var pairs = ck.split(';');
+			for(var i=0; i < pairs.length ; i++){
+				var pair = pairs[i].split(':');
+				var id = pair[0];
+				if(!id){
+					continue;
+				}
+				$('#'+ id).attr('checked', pair[1]=='1'?'checked':'');
+				var liid = id.substring(0, id.indexOf('_checkbox') );
+				if(pair[1]=='1'){//show
+					$('#' + liid + " ul").show();
+				}else{//hide
+					$('#' + liid + " ul").hide();
+				}
+			}
+		}
+		
+		$('input[id$=_checkbox]').each(function(){
+			var id = $(this).attr('id');
+			var liid = id.substring(0, id.indexOf('_checkbox') );
+			
+			var title = $(this).next('span').html();
+			
+			$('#' + liid).attr('title',"复选框可以设置显示/隐藏:" + title);
+			
+			
+			$(this).next('span').css('font-weight','bold').html(title + "&nbsp;>>");
+			
+			$(this).click(function(){ 
+//				alert('toggle: ' + liid);
+				var ck = $(this).attr('checked');
+				 
+				if(ck){//show
+					$('#' + liid + " ul").show();
+				}else{//hide
+					$('#' + liid + " ul").hide();
+				}
+			});
+		});
+		$('#saveConfig').click(function(){ 
+			$.cookie('xdsl_main_config',getColumnConfig() );//不用path先
+			alert('配置已经保存到‘此’浏览器。');
+		});
+		
+		
+		$('#StopAllWaitedServiceLink').click(function(){
+			if($(this).attr("disabled") ){
+				return false;
+			}
+			var b = window.confirm("真的要将 所有待停机用户 转为  停机状态 ?(!!强烈建议先到“用户资料查询”中导出所有待停机用户!!)");
+			if(b){
+				$(this).attr("disabled","disabled");
+				delayStatus($(this), true, 10000);
+			}
+
+			return b;
+		});
+
+		new LiveClock('liveClock', true, true);
+		
+		
+	});
+	
+	function changePassword(a){
+		var np = window.prompt('请输入新密码（空白则取消修改，注：不能填写中文）：','');
+		if(!np){
+			return false;
+		}
+		a.href = a.href + "?np=" + np;
+		
+		return true;
+		
+	}
+
+</script>
+</head>
+<body>
+<div >
+<table border="1" class="header">
+	<tr>
+		<td><img src="${ctx }/images/logo-mini.jpg" alt="logo" />宽带/语音资源系统
+		</td>
+		<td><span id="liveClock"></span>&nbsp;</td>
+		<td>帐号：<c:out value="${sessionScope.accountInfo.account }" default="未登录"></c:out>&nbsp;
+			部门：<c:out value="${sessionScope.accountInfo.branch }" default="无"></c:out>&nbsp;
+		<a href="${ctx }/ChangePassword" onclick="return changePassword(this);" target="_blank" style="color:green;">[修改密码]</a> 	
+		</td>
+		<td><a href="javascript:void(0);" id="saveConfig">保存显示配置</a>	
+		&nbsp;<a href="javascript:window.external.AddFavorite('http://${pageContext.request.localAddr }:${pageContext.request.localPort }<c:if test="${ not empty ctx }">/${ctx }</c:if>','xDSL系统');">收藏</a>
+
+		&nbsp;<a href="${ctx }/Main">首页</a>
+		&nbsp;<a href="${ctx }/Logout">退出</a></td>
+	</tr>
+	<tr >
+	<td colspan="4" style="color:red;font-weight:bold;background:yellow">注意：部分360浏览器不能正常导出，请<a href="http://www.zoum5.com/saysth/280.html" target="_blank">更换其默认的下载工具</a>，或者直接使用其他浏览器。</td>
+	</tr>
+</table>
+<div class="menu_area">
+<ul >
+<c:if test="${sessionScope.accountInfo.level == 1 }">
+	<li id="system_info"><input type="checkbox" id="system_info_checkbox" checked="checked"><span>系统信息</span>
+		<ul>
+		<li><a href="${ctx }/ListLoginUsers" target="_blank">在线账户</a>
+		<div class="summary">--查询在线账户详细情况</div>
+		</li>
+		</ul>
+	</li>
+</c:if>
+<c:if test="${sessionScope.accountInfo.level <= 4 }">
+	<li id="ad_user_info"><input type="checkbox" id="ad_user_info_checkbox" checked="checked"><span>用户资料</span>
+	<ul>
+		<li><a href="${ctx }/UserInfo/List?@default=true">AD用户资料管理*</a>
+		<div class="summary">--以产品号码为中心进行查询，端口必然是已经占用的。同时可以进行端口更新、停复机标示等操作。</div>
+		</li>
+		
+		<li><a href="${ctx }/report?@id=21&page_limit=30">已拆机AD用户资料查询</a>
+ 		<div class="summary">--显示已拆机AD用户资料。</div>
+ 		</li> 
+ 		
+	<c:if test="${sessionScope.accountInfo.level == 1 }">
+			<li  title="管理员权限"><a href="${ctx }/PrepareExportAccessRoom?fileId=1" title="根据指定接入间导出">指定接入间客户信息导出(管理员)*</a>
+			<div class="summary">--根据指定接入间导出机房端口信息，也可以导出所有机房端口信息。不导出已屏蔽的端口信息。</div>
+			</li>
+	</c:if>
+		<li><a href="${ctx }/PrepareExportAccessRoom?fileId=2" title="根据指定接入间导出">指定接入间客户信息导出(监控)*</a>
+		<div class="summary">--根据指定接入间导出机房端口信息。不导出已屏蔽的端口信息。</div>
+		</li>
+		
+		<li><a href="${ctx }/UserInfo/PrepareSpecifiedExport" title="根据指定产品号码/用户帐号列表导出">指定AD用户资料导出*(根据指定产品号码/用户帐号列表导出)</a>
+		<div class="summary">--根据指定的产品号码/用户帐号列表导出用户信息。</div>
+		</li>
+	<c:if test="${sessionScope.accountInfo.level == 1 }">
+		<li><a href="${ctx }/Ossjx/List" target="_blank">OSS与ADSL系统的机房名称对应表</a></li>
+		<!--  -->
+		<li><a href="${ctx }/UserInfo/PrepareImport" target="_blank"><span class="emphasis">[新装*]</span>AD用户资料<span class="emphasis">导入</span></a>
+		<div class="summary">--根据指定格式文件，导入<span class="emphasis">新装*</span>用户信息。</div>
+		</li>
+		<li><a href="${ctx }/UserInfoPrepareEdit" target="_blank">新增<span class="emphasis">[新装*]</span>用户信息<sup style="color:red;">new</sup></a>
+		<div class="summary">--手工录入<span class="emphasis">新装*</span>用户信息。</div>
+		</li>
+		
+		<li><a href="${ctx }/UserInfo/UserStatePrepareBatchUpdate?fieldName=state">AD用户状态更新 </a>
+		<div class="summary">--根据指定格式文件，导入并更新用户信息状态。</div></li>
+		
+		<li><a href="${ctx }/UserInfo/PrepareBatchUpdateService">AD用户停复机更新</a>
+		<div class="summary">--根据指定格式文件，导入并更新用户停复机状态。</div></li>
+		</li>
+		<li><a href="${ctx }/UserInfo/StopAllWaitedService" target="_blank" id="StopAllWaitedServiceLink" title="10秒内不能连续点击">AD用户待停机 转 停机</a>
+		<div class="summary">--点击后，所有待停机用户转为停机状态，请谨慎操作。</div></li>
+		</li>
+	</c:if>
+	</ul>
+	</li>
+
+	<li  id="ad_jx_info"><input type="checkbox" id="ad_jx_info_checkbox" checked="checked"><span>机房资料(AD端口)</span>
+	<ul> 
+		<li><a href="${ctx }/JxInfo/List?@default=true">机房AD端口管理*</a>
+		<div class="summary">--以机房端口（J_ID）为中心进行查询，端口可以是已经占用的、未占用的和置坏的。</div>
+		</li>
+		
+		<li><a href="${ctx }/report?@id=20&page_limit=30">AD号码/帐号端口查询</a>
+ 		<div class="summary">--显示AD端口信息，如果已经占有，则多显示相关用户信息，代维使用。</div>
+ 		</li> 
+ 		
+		<li><a href="${ctx }/report?@id=7&page_limit=30">机房AD端口查询(监控专用)</a>
+ 		<div class="summary">--查询AD端口信息，监控专用。</div>
+ 		</li> 
+ 		<li><a href="${ctx }/report?@id=11&page_limit=30">空闲AD端口查询(配号用)</a>
+ 		<div class="summary">--查询AD空闲（未占用的）端口信息，配号用。</div>
+ 		</li> 
+ 		
+		<c:if test="${sessionScope.accountInfo.level == 1 }">
+		<li><a href="${ctx }/JxInfo/PrepareImport" target="_blank"><span class="emphasis">[新增*]</span>端口资料导入</a>
+		<div class="summary">--根据指定格式文件，导入<span class="emphasis">新增*</span>端口信息。</div>
+		</li>
+		</c:if>
+		<li><a href="${ctx }/report?@id=2&page_limit=200">一个设备端口对应多个帐号清单</a>
+		<div class="summary">--<span class="emphasis">显示非法数据关联</span>，如果存在，应该对数据库数据关联进行调整</div>
+		</li>
+		<li><a href="${ctx }/report?@id=2&page_limit=200">多个设备端口对应一个帐号清单</a>
+		<div class="summary">--<span class="emphasis">显示非法数据关联</span>，如果存在，应该对数据库数据关联进行调整</div>
+		</li>
+		<li>统计报表
+			<ul>
+				<li><a href="${ctx }/report?@id=1&page_limit=100&@default=true&@_mask=%23">机房AD端口数统计</a>
+				<div class="summary">--根据机房、设备分组统计已用、未用、置坏端口数，默认不统计已屏蔽端口</div>
+				</li>
+				
+				<li><a href="${ctx }/report?@id=3&page_limit=100&@default=true&@_mask=%23">接入间资源统计* </a>
+				<div class="summary">--根据机房分组分别统计AD、EPON（VD）、FTTH已用、未用、置坏端口数，默认不统计已屏蔽端口</div>
+				</li>
+				<li><a href="${ctx }/report?@id=10&page_limit=100">机房AD端口更新历史*</a>
+				<div class="summary">--查询机房端口更新历史。</div>
+				</li>
+				<li><a href="${ctx }/report?@id=4&page_limit=100">AD系统机房名称表</a>
+				<div class="summary">--显示AD系统所有机房名称。</div>
+				</li>
+				<li><a href="${ctx }/report?@id=5&page_limit=100">操作日志查询</a>
+				<div class="summary">--显示使用客户端的操作日志(非网页版的操作日志)。</div>
+				</li>
+			</ul>
+		</li>
+	</ul>
+	</li>
+	
+	<li id="phone_jx_info"><input type="checkbox" id="phone_jx_info_checkbox" checked="checked"><span>机房资料(语音端口)</span>
+	<ul>
+		<li><a href="${ctx }/report?@id=30&page_limit=30">语音端口查询（PSTN，不关联横列，速度较快）</a>
+ 		<div class="summary">--连接远程的语音服务器，进行PSTN语音端口查询，不关联横列，速度较快，代维使用。</div>
+ 		</li>
+ 		<li><a href="${ctx }/report?@id=32&page_limit=30">语音端口查询（PSTN，关联横列，但是不全，速度较慢）</a>
+ 		 <div class="summary">--连接远程的语音服务器，进行PSTN语音端口查询，关联横列，但是不全，速度较慢，但应以OSS为准，代维使用。</div>
+ 		</li>
+ 		<li><a href="${ctx }/report?@id=31&page_limit=30">语音端口查询（NGN）</a>
+ 		 <div class="summary">--连接远程的语音服务器，进行NGN语音端口查询，已经关联横列，但应以OSS为准，代维使用。</div>
+ 		</li>
+		<li title="管理员权限">统计报表*
+			<c:if test="${sessionScope.accountInfo.level == 1 }">
+			<ul>
+				<li><a href="${ctx }/report?@id=33&page_limit=100">NGN设备统计</a>
+				<div class="summary">--连接远程的语音服务器，根据机房、设备分组统计NGN设备端口占用和反极端口占用情况。</div>
+				</li>
+				<li><a href="${ctx }/report?@id=34&page_limit=100">PSTN板卡统计 </a>
+				<div class="summary">--连接远程的语音服务器，根据机房分组统计PSTN设备端口占用和反极端口占用情况。</div>
+				</li> 
+			</ul>
+			</c:if>
+		</li>
+	</ul>
+	</li>
+	
+	<li id="data_profession"><input type="checkbox" id="data_profession_checkbox" checked="checked"><span>数据专业资料</span>
+	<ul>
+	 
+		<li><a href="${ctx }/report?@id=8&page_limit=30">设备端口资料查询</a>
+ 		<div class="summary">--查询数据专业设备端口资料。</div>
+ 		</li> 
+		 
+		<li><a href="${ctx }/report?@id=9&page_limit=30">互联网专线资料查询</a>
+ 		<div class="summary">--查询互联网专线资料。</div>
+ 		</li>
+		<li>统计报表
+			<ul>
+				  <li>暂无</li>
+			</ul>
+		</li>
+	</ul>
+	</li>
+	
+	
+</c:if>	<%-- 运维 
+	<li id="maintain_agent"><input type="checkbox" id="maintain_agent_checkbox" checked="checked" ><span>代维查询</span>
+	<ul>
+ 		<li><a href="${ctx }/report?@id=20&page_limit=30">AD号码/帐号端口查询</a>
+ 		<div class="summary">--显示AD端口信息，如果已经占有，则多显示相关用户信息，代维使用。</div>
+ 		</li> 
+ 		<li><a href="${ctx }/report?@id=30&page_limit=30">语音端口查询（PSTN，不关联横列，速度较快）</a>
+ 		<div class="summary">--连接远程的语音服务器，进行PSTN语音端口查询，不关联横列，速度较快，代维使用。</div>
+ 		</li>
+ 		<li><a href="${ctx }/report?@id=32&page_limit=30">语音端口查询（PSTN，关联横列，但是不全，速度较慢）</a>
+ 		 <div class="summary">--连接远程的语音服务器，进行PSTN语音端口查询，关联横列，但是不全，速度较慢，但应以OSS为准，代维使用。</div>
+ 		</li>
+ 		<li><a href="${ctx }/report?@id=31&page_limit=30">语音端口查询（NGN）</a>
+ 		 <div class="summary">--连接远程的语音服务器，进行NGN语音端口查询，已经关联横列，但应以OSS为准，代维使用。</div>
+ 		</li>
+	</ul>		
+	</li>
+ --%>
+</ul>
+</div>
+<tags:footer></tags:footer>
+</div>
+</body>
+</html>
+

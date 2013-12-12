@@ -1,0 +1,20 @@
+--根据u_id/产品号 查找旧端口old_j_id
+--查找新端口的new_j_id
+
+--更新user_info的j_id
+update user_info  set j_id=135311
+where p_id='075000366685'
+
+--更新jx_info的旧端口信息
+update jx_info
+set used=0,u_id=null
+where j_id=94480
+
+--更新jx_info的新端口信息
+update jx_info
+set used=1,u_id=118565
+where j_id=135311
+
+
+端口更新历史(port_change_hist)：
+change_id, p_id, u_id ,username, old_j_id, new_j_id, remark, change_time, changer

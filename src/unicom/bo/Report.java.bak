@@ -1,0 +1,152 @@
+package unicom.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@SuppressWarnings("unchecked")
+public class Report {
+	private static final Pattern TITLE_PATTERN = Pattern.compile("as\\s+\\\"([^\\\"]+)\\\"");//as "标题名", as与"之间不能有换行
+	//报表标题行的所有标题
+	String id;
+
+	List<String> titles = new ArrayList<String>();
+
+	List<Map> data = null;
+
+	String sqlFetch;
+
+	String currentSql;//with condition
+
+//	Boolean doLimit = false;
+
+	Integer limit = null;//查询限制可见数,导出不限制
+
+	Date sqlFirstUsedTime;//优化之用
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Date getSqlFirstUsedTime() {
+		return sqlFirstUsedTime;
+	}
+
+	public void setSqlFirstUsedTime(Date sqlFirstUsedTime) {
+		this.sqlFirstUsedTime = sqlFirstUsedTime;
+	}
+
+	public long getSqlUsedTime(){
+		if(sqlFirstUsedTime == null){
+			return -1;
+		}
+		return new Date().getTime() - sqlFirstUsedTime.getTime();
+	}
+
+	private Report(){};
+
+
+	public List<String> getTitles() {
+		return titles;
+	}
+
+	 void setTitles(List<String> titles) {
+		this.titles = titles;
+	}
+
+
+	public String getSqlFetch() {
+		return sqlFetch;
+	}
+
+
+     void setSqlFetch(String sqlFetch) {
+		this.sqlFetch = sqlFetch;
+	}
+
+     /**
+      * sql server only
+      * @return
+      */
+ 	public String getLimitedSqlFetch() {
+ 		if(this.limit != null && this.limit > 0){
+ 			String t = sqlFetch.toLowerCase();
+ 			int i = t.indexOf("select");
+ 			if(i > -1){
+ 				return sqlFetch.substring(0, i+ 7 )+ " top " + this.limit + " " + sqlFetch.substring(i+7);
+ 			}
+ 		}
+
+		return sqlFetch;
+	}
+
+
+	public List<Map> getData() {
+		return data;
+	}
+
+
+	public void setData(List<Map> data) {
+		this.data = data;
+	}
+
+	public Integer getDataSize(){
+		return data != null ? data.size() : -1;
+	}
+
+	public String getCurrentSql() {
+		return currentSql;
+	}
+
+	public void setCurrentSql(String currentSql) {
+		this.currentSql = currentSql;
+	}
+
+
+//	public Boolean getDoLimit() {
+//		return doLimit;
+//	}
+//
+//	public void setDoLimit(Boolean doLimit) {
+//		this.doLimit = doLimit;
+//	}
+
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
+	public static Report parse(String sqlFetch){
+		if(sqlFetch == null){
+			return null;
+		}
+		Report r = new Report();
+		r.setSqlFetch(sqlFetch);
+		//是否先删除换行？
+		Matcher matcher = TITLE_PATTERN.matcher(sqlFetch);
+		int cols = 1;
+		StringBuffer sb = new StringBuffer();
+		while(matcher.find()){
+			String group = matcher.group(1);
+			//do str
+			r.getTitles().add(group);
+//			matcher.appendReplacement(sb, "");//FIXME "as c_" + cols避免出现相同的列名(i.status, b.status 会出错),但是Mysql下不通过
+//			cols++;
+		}
+//		matcher.appendTail(sb);
+
+		r.setSqlFirstUsedTime(new Date());
+		return r;
+
+	}
+}

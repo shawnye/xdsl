@@ -1,0 +1,119 @@
+package unicom.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
+
+import unicom.common.Page;
+import unicom.common.PaginationHelper;
+
+
+public class BaseDao extends JdbcDaoSupport implements BaseDaoInterface {
+	private Log log = LogFactory.getLog(BaseDao.class);
+	
+	@SuppressWarnings("unchecked")
+	public Page<Map> listAsMap(final String sqlCountRows,
+            final String sqlFetchRows, Object[] args, int pageNo, int pageSize) {
+		JdbcTemplate template = this.getJdbcTemplate();
+		//setFetchSize for processing large result sets
+//		template.setFetchSize(start);//?
+		//setMaxRows for processing subsets of large result sets
+//		template.setMaxRows(length);
+		 
+		PaginationHelper<Map> ph = new PaginationHelper<Map>();
+//		final ParameterizedRowMapper<Map> rowMapper = new MapRowMapper() ;
+		
+		return ph.fetchPage(template, sqlCountRows, sqlFetchRows, args, pageNo, pageSize, new MapRowMapper()  );
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Map> listAllAsMap(String sqlFetchRows, Object[] args) {
+		JdbcTemplate template = this.getJdbcTemplate();
+		final ParameterizedRowMapper<Map> rowMapper = new MapRowMapper() ;
+		
+		log.debug("查询语句:\n" + sqlFetchRows);
+		
+		return (List<Map>) template.query(
+                sqlFetchRows,
+                args,
+                new ResultSetExtractor() {
+ 
+					public Object extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        final List results = new ArrayList();
+                        int currentRow = 0;
+                        while (rs.next()) { 
+							results.add(rowMapper.mapRow(rs, currentRow));
+                            currentRow++;
+                        }
+                        return results;
+                    }
+                });
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map findUnique(String sqlFetch, Object[] args) {
+		JdbcTemplate template = this.getJdbcTemplate();
+		return template.queryForMap(sqlFetch, args);
+	}
+
+	public int update(String sqlUpdate, Object[] args) {
+		JdbcTemplate template = this.getJdbcTemplate();
+		
+		int i = template.update(sqlUpdate, args);
+		
+		
+		log.debug("更新语句：\n" + sqlUpdate);
+		log.debug("更新影响数据行数：" + i);
+		
+		return i;
+	}
+
+//	public int[] batchUpdateWithSameSql(String sqlUpdate, List<Object[]> args, int batchSize) {
+//		if(batchSize <= 0){
+//			batchSize = 30;
+//		}
+//		JdbcTemplate template = this.getJdbcTemplate();
+//
+//		BatchPreparedStatementSetter pss = new BaseBatchPreparedStatementSetter(args, batchSize) ;
+//		return template.batchUpdate(sqlUpdate, pss );
+//	}
+
+	public int[] batchUpdateWithSameSql(String sqlUpdate, List<Object[]> args) {
+		if(args == null){
+			args = new ArrayList<Object[]>(0);
+		}
+//		return this.batchUpdateWithSameSql(sqlUpdate, args, args.size());
+		JdbcTemplate template = this.getJdbcTemplate();
+
+		BatchPreparedStatementSetter pss = new BaseBatchPreparedStatementSetter(args) ;
+		
+		log.debug("批量更新数： " + args.size() + "，[相同]更新语句：\n" + sqlUpdate);
+		return template.batchUpdate(sqlUpdate, pss );
+	}
+
+
+	public int[] batchUpdate(String[] sqlUpdates) {
+		JdbcTemplate template = this.getJdbcTemplate();
+		
+		log.debug("批量更新语句 ：");
+		for (int i = 0; i < sqlUpdates.length; i++) {
+			log.debug("[" + (i+1) + "]" + sqlUpdates[i]);
+		}
+		
+		return template.batchUpdate(sqlUpdates);
+	}
+	
+	
+}
