@@ -11,6 +11,7 @@ select
       
       j0.outer_vlan as "外层VLAN",
       j0.inner_vlan as "内层VLAN",
+      j0.ip as "设备IP地址",
       
       u0.ont_id as "ONT端口", 
       j0.sn as "SN", 

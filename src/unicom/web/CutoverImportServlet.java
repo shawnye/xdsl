@@ -2,6 +2,8 @@ package unicom.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +20,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import unicom.common.port.ImportConfig;
 import unicom.common.port.ImportFileException;
+import unicom.xdsl.service.CutoverService;
 import unicom.xdsl.service.JxInfoService;
 import unicom.xdsl.service.converter.BatchNumFieldConverter;
 import unicom.xdsl.service.converter.IntegerFieldConverter;
@@ -25,15 +28,14 @@ import unicom.xdsl.service.converter.JxInfoRemarkFieldConverter;
 import unicom.xdsl.service.converter.TypeConverter;
 
 /**
- * Servlet implementation class UserInfoImportServlet
  */
-public class JxInfoImportServlet extends BaseServlet {
+public class CutoverImportServlet extends BaseServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public JxInfoImportServlet() {
+    public CutoverImportServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,7 +45,7 @@ public class JxInfoImportServlet extends BaseServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		boolean b = super.checkPrivilege(request, response, "端口信息导入功能需要写权限.", 2);
+		boolean b = super.checkPrivilege(request, response, "割接资源表导入功能需要写权限.", 2);
 		if(b){
 			return;
 		}
@@ -79,38 +81,25 @@ public class JxInfoImportServlet extends BaseServlet {
 			        processUploadedFile(item, file);
 			        String name = item.getName();
 
-			        JxInfoService jxInfoService = (JxInfoService) wc.getBean("jxInfoService");
-			        
+			        CutoverService cutoverService = (CutoverService) wc.getBean("cutoverService");
+
 
 			        ImportConfig importConfig = new ImportConfig();
-			        importConfig.setTable("jx_info");
+			        importConfig.setTable("cutover");
 			        
-			        importConfig.parseFieldOrdersString("jx=,sbh=,type=,slot=,sb_port=,mdf_port=,used=,board_type=,inner_vlan=,outer_vlan=,ip=,olt=,ont_ports=,jremark=,batch_num=,@j_id=", ",");//,mdf_port=9
-
-			        importConfig.addFieldConverter(new TypeConverter(importConfig, "type","AD,PON-AD,PON-LAN,LAN,WLAN,FTTH".split("\\,")));
-
-			        importConfig.addFieldConverter(new IntegerFieldConverter(importConfig, "slot"));
-			        importConfig.addFieldConverter(new IntegerFieldConverter(importConfig, "sb_port"));
-			        importConfig.addFieldConverter(new IntegerFieldConverter(importConfig, "used", 0));//默认是0
-			        importConfig.addFieldConverter(new IntegerFieldConverter(importConfig, "ont_ports", 4));//默认是4
-			        importConfig.addFieldConverter(new BatchNumFieldConverter(importConfig, "batch_num"));
-
-			        importConfig.setUpdateType(Integer.valueOf(fields.get("updateType")));//这里不能用request.getParame
-			        
-			        JxInfoRemarkFieldConverter jxInfoRemarkFieldConverter = (JxInfoRemarkFieldConverter) wc.getBean("jxInfoRemarkFieldConverter");
-
-			        jxInfoRemarkFieldConverter.setField("jremark");
-			        jxInfoRemarkFieldConverter.setImportConfig(importConfig);
-			        jxInfoRemarkFieldConverter.setTemplate("导入批次：{0}"); 
-			        importConfig.addFieldConverter(jxInfoRemarkFieldConverter); 
-
+			        importConfig.parseFieldOrdersString("old_jx=,old_sbh=,old_mdf_port=,new_mdf_port=,new_sbh=,new_jx=,account_or_pid=,phone_mdf_port=,col_mdf_port=,cutover_remark", ",");//,mdf_port=9
+  
+			        Map<String,Object> updateInfo = new HashMap<String, Object>();
+			        updateInfo.put("remark", fields.get("remark"));
+			        updateInfo.put("creater", super.getAccountInfo(request).getAccount());
+			        updateInfo.put("create_time", new Date());
 					try {
-						b =  jxInfoService.importFile(file, importConfig, msg);
+						b =  cutoverService.importFile(file, importConfig, updateInfo, msg);
 						
-						logService.log("端口资源导入", "原始文件名：" + name + "," + msg,  super.getAccountInfo(request).getAccount());
+						logService.log("割接资源表导入", "原始文件名：" + name + "," + msg,  super.getAccountInfo(request).getAccount());
 					} catch (ImportFileException e) {
 						log.error(e);
-						request.setAttribute("popMsg", "端口信息导入出现异常。详细情况如下：\n" + msg);
+						request.setAttribute("popMsg", "割接资源表导入出现异常。详细情况如下：\n" + msg);
 						request.getRequestDispatcher("/WEB-INF/popup.jsp").forward(request, response);
 						return;
 					}//csv
@@ -126,8 +115,8 @@ public class JxInfoImportServlet extends BaseServlet {
 
 			msg.append("导入耗时(秒)：" + (System.currentTimeMillis()-start)/1000) ;
 
-			log.info( "端口信息导入完成 ，影响行数: " + updates + "。详细情况如下：\n" + msg);
-			request.setAttribute("popMsg", "端口信息导入完成 ，影响行数: " + updates + "。详细情况如下：\n" + msg);
+			log.info( "割接资源表导入完成 ，影响行数: " + updates + "。详细情况如下：\n" + msg);
+			request.setAttribute("popMsg", "割接资源表导入完成 ，影响行数: " + updates + "。详细情况如下：\n" + msg);
 			request.getRequestDispatcher("/WEB-INF/popup.jsp").forward(request, response);
 
 
@@ -149,7 +138,12 @@ public class JxInfoImportServlet extends BaseServlet {
 
 	private void processFormField(FileItem item, Map<String , String> fields) {
 		String name = item.getFieldName();
-	    String value = item.getString();
+	    String value = null;
+		try {
+			value = item.getString("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
 	    fields.put(name, value);
 //	    System.out.println(name + "=" + value);

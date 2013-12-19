@@ -385,8 +385,8 @@ function collectSelectedItems(delim){
 		</td>
 </tr>
 <tr> 
-	<td class="label">&nbsp;</td>
-	<td>&nbsp;</td>
+	<td class="label">J_ID</td>
+	<td><input type="text" name="j_id=" id="j_id" value="${ j_id }" size="10" title="精确匹配">&nbsp;</td>
 	<td class="label">&nbsp;</td>
 	<td>&nbsp;</td>
 	<td class="label">产品类型</td>

@@ -263,6 +263,33 @@
     <servlet-name>UserInfoPrepareImportServlet</servlet-name>
     <url-pattern>/UserInfo/PrepareImport</url-pattern>
   </servlet-mapping>
+  
+  
+<servlet>
+    <description></description>
+    <display-name>CutoverImportServlet</display-name>
+    <servlet-name>CutoverImportServlet</servlet-name>
+    <servlet-class>unicom.web.CutoverImportServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CutoverImportServlet</servlet-name>
+    <url-pattern>/Cutover/Import</url-pattern>
+  </servlet-mapping>  
+ <servlet>
+ 
+    <description></description>
+    <display-name>CutoverPrepareImportServlet</display-name>
+    <servlet-name>CutoverPrepareImportServlet</servlet-name>
+    <servlet-class>unicom.web.CutoverPrepareImportServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CutoverPrepareImportServlet</servlet-name>
+    <url-pattern>/Cutover/PrepareImport</url-pattern>
+  </servlet-mapping>
+ 
+  
+  
+  
   <servlet>
     <description></description>
     <display-name>FileDefineListServlet</display-name>

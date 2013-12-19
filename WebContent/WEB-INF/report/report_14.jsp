@@ -324,7 +324,7 @@ function collectSelectedItems(delim){
 	<td class="label">帐号或产品号：</td>
 	<td><input type="text" name="account_or_pid" value="${ account_or_pid }" size="10" id="account_or_pid"><input type="checkbox" id="account_or_pid_exact" >精确查询</td> 
 	<td class="label">割接说明：</td>
-	<td><input type="text" name="remark" id="remark"  value="${ remark }"  size="10"  title="模糊查询"> 
+	<td><input type="text" name="cutover_remark" id="cutover_remark"  value="${ cutover_remark }"  size="10"  title="模糊查询"> 
 	</td> 
 </tr>
 <tr> 
@@ -405,6 +405,23 @@ function collectSelectedItems(delim){
 	<td><input type="text" name="new_mdf_port" value="${ new_mdf_port }" size="10" id="new_mdf_port"><input type="checkbox" id="new_mdf_port_exact" >精确查询</td> 
 	
 </tr>
+<tr>
+	<td class="label">导入批次*：</td>
+	<td><input type="text" name="batch_num" id="batch_num" value="${ batch_num }" size="20"></td>
+	<td class="label">是否已更新成功</td>
+	<td>
+	<select name="updated=" >
+		<option value="">所有</option>
+		<option value="0" <c:if test="${ updated == 0 }">selected="selected" style="color:red;"</c:if> >否</option>
+		<option value="1" <c:if test="${ updated == 1 }">selected="selected" style="color:red;"</c:if> >是</option>
+	</select>
+	</td> 
+	<td class="label">备注：</td>
+	<td><input type="text" name="remark" id="remark"  value="${ remark }"  size="15"  title="模糊查询"> 
+	</td> 
+	 
+</tr>
+
  
 		</table>
 	</form>
