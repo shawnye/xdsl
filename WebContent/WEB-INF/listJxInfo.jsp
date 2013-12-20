@@ -57,7 +57,9 @@
 	a {
 		text-decoration: none;
 	}
-
+	#cond_table{
+		font-size:smaller;
+	}
 </style>
 <script type="text/javascript">
 	
@@ -224,7 +226,23 @@
 		});
 
 		$('#hideCond').click(function(btn){
-			$('#cond_table').toggle('fast');
+			//$('#cond_table').toggle('fast');
+			$('#cond_table').show();
+		});
+		
+		$('#cond_field').mouseover(function(){
+			var c = $('#hideCond').attr('checked');
+			if(c){
+				$('#cond_table').show();	
+			}
+			
+		});
+		
+		$('#cond_field').mouseout(function(){
+			var c = $('#hideCond').attr('checked');
+			if(c){
+				$('#cond_table').hide();	
+			}
 		});
 
 		$('.data_table tbody tr').each(function(){
@@ -322,7 +340,7 @@ function markUnused(j_id){
   
 
 </div>
-<fieldset>
+<fieldset id="cond_field">
 	<legend>机房端口查询条件 <span class="emphasis">(请务必输入一个条件进行查询！)</span> </legend>
 	<div>
 	<form action="${ctx }/JxInfo/List" id="userInfo" method="post" accept-charset="utf-8">
@@ -539,7 +557,7 @@ function markUnused(j_id){
 			<input type="submit" value="导出" id="export" title="请不要大量导出(少于3000条)!"/>&nbsp;
 		</c:if>
 		<input type="button" value="清空" id="clearCond"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="button" value="显示/隐藏条件" id="hideCond"/>&nbsp;
+		<input type="checkbox" id="hideCond" /><span style="background: lightgreen;">自动显示/隐藏条件</span>&nbsp;
 		</div>
 	</form>
 	</div>
