@@ -58,6 +58,9 @@ public class CutoverImportServlet extends BaseServlet {
 			return;
 		}
 
+		CutoverService cutoverService = (CutoverService) wc.getBean("cutoverService");
+        JxInfoService jxInfoService = (JxInfoService) wc.getBean("jxInfoService");
+        
 		 Map<String , String> fields = new HashMap<String , String>();
 
 		 int updates = 0;
@@ -81,7 +84,7 @@ public class CutoverImportServlet extends BaseServlet {
 			        processUploadedFile(item, file);
 			        String name = item.getName();
 
-			        CutoverService cutoverService = (CutoverService) wc.getBean("cutoverService");
+			        
 
 
 			        ImportConfig importConfig = new ImportConfig();
@@ -114,6 +117,13 @@ public class CutoverImportServlet extends BaseServlet {
 			}
 
 			msg.append("导入耗时(秒)：" + (System.currentTimeMillis()-start)/1000) ;
+			
+			String mask_jx = fields.get("mask_jx");
+			String mask_sbh = fields.get("mask_sbh");
+			int masked = jxInfoService.updateMask(true, mask_jx, mask_sbh, null, null);
+			if(masked > 0){
+				msg.append("\n***屏蔽机房【"+mask_jx+"】设备【"+ mask_sbh +"】端口数：" + masked);
+			}
 
 			log.info( "割接资源表导入完成 ，影响行数: " + updates + "。详细情况如下：\n" + msg);
 			request.setAttribute("popMsg", "割接资源表导入完成 ，影响行数: " + updates + "。详细情况如下：\n" + msg);

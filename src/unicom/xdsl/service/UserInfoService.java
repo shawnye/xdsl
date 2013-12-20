@@ -572,7 +572,7 @@ public class UserInfoService extends AbstractService implements FileExporter,Fil
 					Integer order = importConfig.getFieldIndex(field);
 					if(order != null ){
 						if( order < nextLine.length ){
-							objs2[i] = nextLine[order]; 
+							objs2[i] = nextLine[order]!=null ? nextLine[order].trim():null; 
 						}else{
 							objs2[i] = null;
 						}

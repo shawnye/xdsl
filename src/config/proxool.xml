@@ -4,7 +4,8 @@
   <!-- AD资源 -->
   <proxool>
     <alias>adsl</alias>
-    <driver-url>jdbc:sqlserver://127.0.0.1:1433;databaseName=adsl</driver-url>
+    <!-- driver-url>jdbc:sqlserver://10.116.193.126:1433;databaseName=adsl</driver-url --> 
+    <driver-url>jdbc:sqlserver://127.0.0.1:1433;databaseName=adsl</driver-url -->
     <driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
   
     <statistics>1m,15m,1d</statistics>

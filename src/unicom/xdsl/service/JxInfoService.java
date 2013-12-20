@@ -879,7 +879,82 @@ public class JxInfoService extends AbstractService implements FileExporter{
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param mask
+	 * @param jx
+	 * must
+	 * @param sbh
+	 * must
+	 * @param slot
+	 * optional
+	 * @param sb_port
+	 * optional
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public int updateMask(Boolean mask, String jx, String sbh, Integer slot , Integer sb_port){
+		if(StringUtils.isBlank(jx) || StringUtils.isBlank(sbh)){
+			return 0;
+		}
+		
+		List args = new ArrayList();
+		 StringBuilder sb = new StringBuilder();
+		if(mask){ 
+		  sb.append("update jx_info set mask=? where jx=? and sbh=? ") ;
+		  args.add(1);	
+		 
+		}else{
+			sb.append("update jx_info set mask=null where jx=? and sbh=? ") ;
+		}
+		  args.add(jx);	
+		  args.add(sbh);	
+		  
+		  if(slot != null){
+			  sb.append(" and slot=?");
+			  args.add(slot);	
+		  }
+		  
+		  if(sb_port != null){
+			  sb.append(" and sb_port=?");
+			  args.add(slot);	
+		  }
+		return this.baseDao.update(sb.toString(), args.toArray());
+	}
 	
-	
+	public int updateMask(Boolean mask,Integer[] j_ids){
+		if(j_ids == null || j_ids.length == 0){
+			return 0;
+		}
+		List args = new ArrayList();
+		 StringBuilder sb = new StringBuilder();
+		if(mask){
+		  args.add(1);	
+		  sb.append("update jx_info set mask=? where j_id in (") ;
+			for (int i = 0; i < j_ids.length; i++) {
+				if(j_ids[i] != null){
+					sb.append("?,");
+				}
+				args.add(j_ids[i]);
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			sb.append(")");
+		}else{
+			sb.append("update jx_info set mask=null where j_id in (") ;
+			for (int i = 0; i < j_ids.length; i++) {
+				if(j_ids[i] != null){
+					sb.append("?,");
+				}
+				args.add(j_ids[i]);
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			sb.append(")");
+		}
+		
+		return this.baseDao.update(sb.toString(), args.toArray());
+		
+	}
 	
 }

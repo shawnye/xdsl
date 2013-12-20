@@ -139,7 +139,7 @@ public class CutoverService {
 					Integer order = importConfig.getFieldIndex(field);
 					if(order != null ){
 						if( order < nextLine.length ){
-							objs2[i] = nextLine[order]; 
+							objs2[i] = nextLine[order]!=null? nextLine[order].trim():null; 
 						}else{
 							objs2[i] = null;
 						}
@@ -187,7 +187,7 @@ public class CutoverService {
 				"update cutover\r\n" +
 				"set updated=0,remark=?,creater=?,create_time=?\r\n" + 
 				"where batch_num=?";
-			
+			log.debug("["+defatulBatchNum+"]补充基础信息...");
 			this.baseDao.update(updateSql, new Object[]{updateInfo.get("remark"),
 					updateInfo.get("creater"),
 					updateInfo.get("create_time"),
@@ -198,64 +198,119 @@ public class CutoverService {
 					"update cutover\r\n" +
 					"set new_jx=old_jx\r\n" + 
 					"where batch_num=? and (new_jx is null or new_jx ='' )";
-				
+			log.debug("["+defatulBatchNum+"]补充新机房名称（若空的话=旧机房名称）...");	
 				this.baseDao.update(updateSql, new Object[]{
 						defatulBatchNum
 						});
 			
-			//update old j_id ,u_id with account_or_pid
+			//update u_id with account_or_pid , or操作非常慢，分为两条语句飞快
 			updateSql =
 					"update cutover\r\n" + 
-					"set u_id=u.u_id,old_j_id=u.j_id\r\n" + 
+					"set u_id=u.u_id\r\n" + //old_j_id=u.j_id
 					"from user_info u\r\n" + 
-					"where u.user_no=account_or_pid or u.p_id=account_or_pid\r\n" + 
+					"where u.user_no=account_or_pid\r\n" + 
 					"and cutover.batch_num=?";
-				
-			int updates0 = this.baseDao.update(updateSql, new Object[]{
+			log.debug("["+defatulBatchNum+"]补充U_ID(根据账号)...");	
+			this.baseDao.update(updateSql, new Object[]{
 						defatulBatchNum
 						});
 			
-			//update new_j_id with <jx,new_mdf_port>
+			updateSql =
+					"update cutover\r\n" + 
+					"set u_id=u.u_id\r\n" + //old_j_id=u.j_id
+					"from user_info u\r\n" + 
+					"where u.p_id=account_or_pid\r\n" + 
+					"and cutover.batch_num=?";
+			log.debug("["+defatulBatchNum+"]补充U_ID(根据产品号码)...");
+			this.baseDao.update(updateSql, new Object[]{
+						defatulBatchNum
+						});
+			//update old_j_id with <old_jx,old_mdf_port>
+			updateSql =
+					"update cutover\r\n" + 
+					"set old_j_id=j.j_id\r\n" + 
+					"from jx_info j\r\n" + 
+					"where j.jx=cutover.old_jx and j.mdf_port=cutover.old_mdf_port\r\n" + 
+					"and cutover.batch_num=?";
+			log.debug("["+defatulBatchNum+"]查找旧J_ID(根据旧机房名和MDF端口)...");	
+			this.baseDao.update(updateSql, new Object[]{
+						defatulBatchNum
+						});
+			
+			//update new_j_id with <new_jx,new_mdf_port>
 			updateSql =
 					"update cutover\r\n" + 
 					"set new_j_id=j.j_id\r\n" + 
 					"from jx_info j\r\n" + 
 					"where j.jx=cutover.new_jx and j.mdf_port=cutover.new_mdf_port\r\n" + 
 					"and cutover.batch_num=?";
-				
+			log.debug("["+defatulBatchNum+"]查找新J_ID(根据新机房名和MDF端口)...");	
 			int updates = this.baseDao.update(updateSql, new Object[]{
 						defatulBatchNum
 						});
+		
 			//注:以上更新有些可能是NULL，导致更新数不等于导入行数
-//--------------------------------------------------------------------------------			
+//--------------------------------------------------------------------------------	
+			List<Map> invalidList = findInvalidNewJid(defatulBatchNum);
+			if(invalidList!= null && invalidList.size() > 0){
+				StringBuilder sb = new StringBuilder("以下新端口因已经占用而无法使用：\n");//或置坏或屏蔽
+				for (Map map : invalidList) {
+ 					sb.append("J_ID=");
+					sb.append( map.get("J_ID"));
+					sb.append(",新机房=");
+					sb.append( map.get("new_jx"));
+					sb.append(",新MDF端口=");
+					sb.append( map.get("new_mdf_port"));
+					sb.append(":");
+					Boolean used = (Boolean) map.get("used");
+					Integer mask = (Integer) map.get("mask");
+					if(used == null){
+						sb.append("已经置坏 ");
+					}
+					if(used != null && used){
+						sb.append("已经占用 ");
+					}
+					if(mask != null){
+						sb.append("已经屏蔽 ");
+					}
+					
+					sb.append("\n");
+				}
+				throw new Exception(sb.toString());
+
+			}
+			
+			
+			
 			//更新用户端口
 			updateSql ="update user_info\r\n" + 
 					"set j_id=new_j_id\r\n" + 
 					"from cutover c\r\n" + 
 					"where user_info.u_id=c.u_id\r\n" + 
 					"and c.batch_num=?";
-			
-			updates = this.baseDao.update(updateSql, new Object[]{
+			log.debug("["+defatulBatchNum+"]user_info表更新用户端口(J_ID)...");
+			int updates0 = this.baseDao.update(updateSql, new Object[]{
 						defatulBatchNum
 					});
 			
 			msg.append("更新用户信息J_ID数：" + updates);
 			msg.append("\n");
 			
-			//--确保不占用冲突(但置坏怎么办)
+			//--占用新端口，确保不占用冲突(但置坏怎么办)
 			updateSql ="update jx_info\r\n" + 
 					"set used=1\r\n" + 
 					"from cutover c\r\n" + 
-					"where jx_info.j_id=c.new_j_id and jx_info.used=0  \r\n" + 
+					"where jx_info.j_id=c.new_j_id and (jx_info.used=0 or jx_info.used is null or jx_info.used='')  \r\n" + 
 					"and c.batch_num=?";
+			log.debug("["+defatulBatchNum+"]设置新端口状态为已经占用(已经占用的不能再占用，必须解决冲突)...");
 			updates = this.baseDao.update(updateSql, new Object[]{
 					defatulBatchNum
 					});
 			
 			if(updates0 > updates){
-				log.error("实际占用新端口数 < 需要占用新端口数（可能新端口已经占用或置坏）：" + updates +"<"+ updates0);
-
-				throw new Exception("实际占用新端口数 < 需要占用新端口数（可能新端口已经占用或置坏）：" + updates +"<"+ updates0);
+				log.error("实际占用新端口数 < 需要占用新端口数（可能新端口已经占用）：" + updates +"<"+ updates0);
+				msg.append("【警告】：实际占用新端口数 < 需要占用新端口数（可能新端口已经占用）：" + updates +"<"+ updates0);
+//				throw new Exception("实际占用新端口数 < 需要占用新端口数（可能新端口已经占用或置坏）：" + updates +"<"+ updates0);
 			}
 
 			//释放原端口
@@ -264,7 +319,7 @@ public class CutoverService {
 					"from cutover c\r\n" + 
 					"where jx_info.j_id=c.old_j_id\r\n" + 
 					"and c.batch_num=?";
-			
+			log.debug("["+defatulBatchNum+"]无条件释放原端口...");
 			updates = this.baseDao.update(updateSql, new Object[]{
 					defatulBatchNum
 					});
@@ -274,11 +329,34 @@ public class CutoverService {
 			updateSql =
 					"update cutover\r\n" + 
 					"set updated=1\r\n" + 
-					"where batch_num=?";
-				
+					"where old_j_id is not null and new_j_id is not null and u_id is not null and  batch_num=?";
+			log.debug("["+defatulBatchNum+"]更新‘是否更新成功’(U_ID，新、旧J_ID不能为空)...");
 			updates = this.baseDao.update(updateSql, new Object[]{
 						defatulBatchNum
 						});
+			
+			updateSql =
+					"update cutover \r\n" + 
+					"set old_sbh=j.sbh\r\n" + 
+					"from jx_info j\r\n" + 
+					"where j.j_id=cutover.old_j_id and old_sbh is null \r\n" + 
+					"and cutover.batch_num=?";
+			log.debug("["+defatulBatchNum+"]补充旧设备号信息（若旧设备为空的话）...");
+			updates = this.baseDao.update(updateSql, new Object[]{
+						defatulBatchNum
+						});
+			
+			updateSql =
+					"update cutover \r\n" + 
+					"set new_sbh=j.sbh\r\n" + 
+					"from jx_info j\r\n" + 
+					"where j.j_id=cutover.new_j_id and new_sbh is null \r\n" + 
+					"and cutover.batch_num=?";
+			log.debug("["+defatulBatchNum+"]补充新设备号信息（若新设备为空的话）...");	
+			updates = this.baseDao.update(updateSql, new Object[]{
+						defatulBatchNum
+						});
+			
 			log.debug("$--------------------割接资源表导入、更新完毕--------------------------$");
 		} catch (IOException e) {
 //			log.error("无法读取csv: " + line,e);
@@ -303,5 +381,14 @@ public class CutoverService {
 
  
 		return true;
+	}
+	/**
+	 * 测试割接的新jid是否已经占用
+	 * @param batchNum
+	 * @return
+	 */
+	private List<Map> findInvalidNewJid(String batchNum){
+		String sql = "select c.*,used,mask from cutover c ,jx_info j where c.new_j_id=j.j_id and (used=1 ) and c.batch_num=? " ;//or used is null or used='' or mask is not null
+		return this.baseDao.findList(sql, new Object[]{batchNum});		
 	}
 }
