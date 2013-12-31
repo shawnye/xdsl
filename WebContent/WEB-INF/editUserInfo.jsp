@@ -72,6 +72,26 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
+	var alertMessage = '${alertMessage}';
+	
+	if(alertMessage){
+		alert(alertMessage);
+	}
+	
+	
+	//it's of no use for main-stream browser.
+	$(window).on('unload', function(){
+//			alert('window unloading...');
+			var type = $('#type').val();
+			if(type == 'FTTH'){
+				var sn = $('#sn').val();
+				if(!sn){
+					return ("FTTH SN号还没有填写，真的要关闭窗口吗？");
+				}
+			}
+
+		});
+
 	// 使用 $ 作为 jQuery 别名的代码
 	  $("#jx").autocomplete(
 				'${ctx}/Jx/Json/List',
@@ -296,20 +316,22 @@ $(document).ready(function() {
 			
 			//remove preceding zero.
 			form.ont_id.value = form.ont_id.value.replace(/^0+/,'');
-			
+			/* 先通路再SN
 			b = fieldRequired(form.sn, 'SN');
 			if(!b){
 				return false;
 			}
-			
-			var sn_reg = /^0750\d{6}$/;
-			var sn_reg2 = /^[a-zA-Z]+\d+$/;
-			if(! sn_reg.test(form.sn.value) &&! sn_reg2.test(form.sn.value) ){
-				alert('FTTH SN必须是0750开头10位数字或英文开头+数值');
-				form.sn.focus();
-				return false;
+			*/
+			if(form.sn.value){
+				var sn_reg = /^0750\d{6}$/;
+				var sn_reg2 = /^[a-zA-Z]+\d+$/;
+				if(! sn_reg.test(form.sn.value) &&! sn_reg2.test(form.sn.value) ){
+					alert('FTTH SN必须是0750开头10位数字或英文开头+数值');
+					form.sn.focus();
+					return false;
+				}
 			}
-			
+			 
 		}else{
 			form.ont_id.value = '';
 			form.sn.value = '';

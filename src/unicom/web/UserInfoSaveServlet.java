@@ -228,9 +228,12 @@ public class UserInfoSaveServlet extends BaseServlet  {
 		log.debug("["+accountInfo+"]保存用户信息...u_id=" + u_id);
 		
 		try {
-			jxInfoService.updateAField(j_id, "sn", sn);
+			if(StringUtils.isNotBlank(sn)){
+				jxInfoService.updateAField(j_id, "sn", sn);
+			} 
 
 			u_id = userInfoService.save(userInfo);
+			
 			
 			request.setAttribute("msg",  "保存成功！" + (accountInfo.getDaiwei()? "您不能在此修改端口信息（灰色部分）":"") );
 			

@@ -38,10 +38,13 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 
         AccountInfo accountInfo = super.getAccountInfo(request); 
         
-		if(StringUtils.isNotBlank(u_id)){
+        String type = null;
+        String sn = null;
+		if(StringUtils.isNotBlank(u_id)){//根据U_ID查询
 	        Map userInfo = userInfoService.findByKey(u_id);
 	        String jx = (String) userInfo.get("jx");
-	        String type = (String) userInfo.get("type");
+	        type = (String) userInfo.get("type");
+	        sn = (String) userInfo.get("sn");
 	        
 	        if(StringUtils.isNotBlank(jx) && StringUtils.isNotBlank(type)){
  				List sbhs = jxInfoService.findSbhLike( jx ,type );
@@ -50,7 +53,7 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
  			}
 	        
 	        request.setAttribute("userInfo", userInfo);
-		}else { 
+		}else { //根据P_ID查询
 			String p_id = request.getParameter("p_id");
 			if(StringUtils.isNotBlank(p_id)){
 				Map userInfo = userInfoService.findByPid(p_id);
@@ -60,7 +63,8 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 	    			return;
 				}
 		        String jx = (String) userInfo.get("jx");
-		        String type = (String) userInfo.get("type");
+		        type = (String) userInfo.get("type");
+		        sn = (String) userInfo.get("sn");
 		        String sbh = (String) userInfo.get("sbh");
 		        
 		        if(StringUtils.isNotBlank(jx) && StringUtils.isNotBlank(type)){
@@ -81,7 +85,7 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 	 			}
 		        
 		        request.setAttribute("userInfo", userInfo);
-			}else{
+			}else{//根据J_ID查询
 				String j_id = request.getParameter("j_id");
 				if(StringUtils.isNotBlank(j_id)){
 					Map jxInfo = jxInfoService.findByKey(j_id);
@@ -96,7 +100,8 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 					userInfo.remove("u_id");//make sure it is new
 					
 					String jx = (String) userInfo.get("jx");
-			        String type = (String) userInfo.get("type");
+			        type = (String) userInfo.get("type");
+			        sn = (String) userInfo.get("sn");
 			        String sbh = (String) userInfo.get("sbh");
 			        
 			        if(StringUtils.isNotBlank(jx) && StringUtils.isNotBlank(type)){
@@ -127,6 +132,9 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 		
 		request.setAttribute("daiwei",accountInfo.getDaiwei());
 
+		if("FTTH".equalsIgnoreCase(type) && StringUtils.isBlank(sn)){
+			request.setAttribute("alertMessage", "FTTH SN为空！");
+    	}
 		
 		request.getRequestDispatcher("/WEB-INF/editUserInfo.jsp").forward(request, response);
 
