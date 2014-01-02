@@ -326,7 +326,14 @@ function collectSelectedItems(delim){
 	<td class="label">机房：</td>
 	<td><input type="text" name="jx" value="${ jx }" size="10" id="jx"><input type="checkbox" id="jx_exact" >精确查询</td> 
 	<td class="label">维护单位：</td>
-	<td><input type="text" name="branch" id="branch"  value="${ branch }"  size="10"  title="模糊查询">
+	<td>
+	<select name="branch" id="branch" >
+				<option value="">请选择</option>
+					<c:forTokens items="自维,讯联,润建,其他" delims="," var="i">
+						<option value="${ i }" <c:if test="${ userInfo.branch == i || (empty userInfo.branch && fn:contains(sessionScope.accountInfo.branch ,i) ) }">selected</c:if> >${ i }</option>
+					</c:forTokens> 
+				</select>
+	 
 	 </td> 
 </tr>
 <tr> 
@@ -365,6 +372,8 @@ function collectSelectedItems(delim){
 	<thead>
 		<tr>
 			<td ><input type="checkbox" name="c0" id="c0">序号</td>
+			<td >操作</td>
+			
 			<c:forEach items="${ report.displayedTitles }" var="t" varStatus="s">
 				<td  <c:if test="${s.index == report.keyIndex }">class="key_field"</c:if> >${ t }</td>
 			</c:forEach>
@@ -376,6 +385,11 @@ function collectSelectedItems(delim){
 			<td>
 			<input type="checkbox" name="c${ s.count }" id="c${ s.count }" value="${ d[report.keyField]}">
 			${ s.count }</td>
+			<td nowrap="nowrap">
+			<c:if test="${ sessionScope.accountInfo.level < 3 }">
+			<a href="${ctx }/UserInfoPrepareEdit?u_id=${d.U_ID }" target="_blank">[更新]</a> 
+			</c:if>
+			</td>
 			<c:forEach items="${d}" var="m" varStatus="s0">
 
 			<c:if test="${ report.columnsDisplayed[s0.index] }"><%-- 是否显示此列 --%>

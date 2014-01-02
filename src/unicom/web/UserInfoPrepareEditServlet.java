@@ -40,11 +40,13 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
         
         String type = null;
         String sn = null;
+        String ont_id = null;
 		if(StringUtils.isNotBlank(u_id)){//根据U_ID查询
 	        Map userInfo = userInfoService.findByKey(u_id);
 	        String jx = (String) userInfo.get("jx");
 	        type = (String) userInfo.get("type");
 	        sn = (String) userInfo.get("sn");
+	        ont_id = (String) userInfo.get("ont_id");
 	        
 	        if(StringUtils.isNotBlank(jx) && StringUtils.isNotBlank(type)){
  				List sbhs = jxInfoService.findSbhLike( jx ,type );
@@ -65,6 +67,8 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 		        String jx = (String) userInfo.get("jx");
 		        type = (String) userInfo.get("type");
 		        sn = (String) userInfo.get("sn");
+		        ont_id = (String) userInfo.get("ont_id");
+
 		        String sbh = (String) userInfo.get("sbh");
 		        
 		        if(StringUtils.isNotBlank(jx) && StringUtils.isNotBlank(type)){
@@ -102,6 +106,8 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 					String jx = (String) userInfo.get("jx");
 			        type = (String) userInfo.get("type");
 			        sn = (String) userInfo.get("sn");
+			        ont_id = (String) userInfo.get("ont_id");
+
 			        String sbh = (String) userInfo.get("sbh");
 			        
 			        if(StringUtils.isNotBlank(jx) && StringUtils.isNotBlank(type)){
@@ -132,8 +138,17 @@ public class UserInfoPrepareEditServlet extends BaseServlet  {
 		
 		request.setAttribute("daiwei",accountInfo.getDaiwei());
 
-		if("FTTH".equalsIgnoreCase(type) && StringUtils.isBlank(sn)){
-			request.setAttribute("alertMessage", "FTTH SN为空！");
+		if("FTTH".equalsIgnoreCase(type) ){
+			StringBuilder alertMessage = new StringBuilder();
+			if(StringUtils.isBlank(ont_id)){
+				alertMessage.append("FTTH ONT端口号为空！\\n");
+			}
+			if(StringUtils.isBlank(sn)){
+				alertMessage.append("FTTH SN为空！\\n");//for js alert!
+			} 
+			
+			request.setAttribute("alertMessage", alertMessage.toString());
+
     	}
 		
 		request.getRequestDispatcher("/WEB-INF/editUserInfo.jsp").forward(request, response);
