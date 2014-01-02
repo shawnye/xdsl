@@ -358,7 +358,7 @@ function collectSelectedItems(delim){
 		</select><input type="checkbox" id="sbh_exact" >精确查询</td> 
 </tr>
 <tr> 
-	<td class="label">槽号</td>
+	<td class="label">槽号：</td>
 	<td><input type="text" name="slot=" id="slot" value="${ slot }" size="10" title="精确查询"></td>
 	<td class="label">VLAN：</td>
 				<td>
@@ -366,7 +366,7 @@ function collectSelectedItems(delim){
 				.内层<input type="text" name="inner_vlan=" value="${ inner_vlan }" id="inner_vlan" size="5" title="精确匹配">
 	
 	</td>
-	<td class="label">板卡型号</td>
+	<td class="label">板卡型号：</td>
 	<td><input type="text" name="board_type" id="board_type" value="${ board_type }" size="10" >
 	<select id="board_type_help">
 			<option value="">[请选择]</option>
@@ -385,11 +385,11 @@ function collectSelectedItems(delim){
 		</td>
 </tr>
 <tr> 
-	<td class="label">J_ID</td>
+	<td class="label">J_ID：</td>
 	<td><input type="text" name="j_id=" id="j_id" value="${ j_id }" size="10" title="精确匹配">&nbsp;</td>
-	<td class="label">&nbsp;</td>
-	<td>&nbsp;</td>
-	<td class="label">产品类型</td>
+	<td class="label">MDF端口：&nbsp;</td>
+	<td><input type="text" name="mdf_port" id="mdf_port" value="${ mdf_port }" size="10" title="模糊匹配">&nbsp;</td>
+	<td class="label">产品类型：</td>
 	<td><input type="text" name="type" id="type" value="${ type }" size="10" >
 	<select id="type_help">
 			<option value="">[请选择]</option>
