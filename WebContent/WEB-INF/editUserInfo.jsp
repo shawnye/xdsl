@@ -78,19 +78,6 @@ $(document).ready(function() {
 		alert(alertMessage);
 	}
 	
-	
-	//it's of no use for main-stream browser.
-	$(window).on('unload', function(){
-//			alert('window unloading...');
-			var type = $('#type').val();
-			if(type == 'FTTH'){
-				var sn = $('#sn').val();
-				if(!sn){
-					return ("FTTH SN号还没有填写，真的要关闭窗口吗？");
-				}
-			}
-
-		});
 
 	// 使用 $ 作为 jQuery 别名的代码
 	  $("#jx").autocomplete(
