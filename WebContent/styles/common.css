@@ -3,6 +3,7 @@ body{
 	padding:0px;
 	text-align: center;
 	font-size:12pt;
+	background-color:#CCE8CF ;/*护眼绿*/
 }
 
 table{
@@ -117,6 +118,7 @@ a , a:VISITED, a:HOVER{
 }
 /*号线权限*/
 .haoxian_privilege{
-	color:orange;
+	color:red;
  	background-color: lightgray;
+ 	font-size:smaller;
 }

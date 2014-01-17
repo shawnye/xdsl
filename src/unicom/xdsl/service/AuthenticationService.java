@@ -3,6 +3,7 @@ package unicom.xdsl.service;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.stereotype.Service;
 
 import unicom.bo.AccountInfo;
+import unicom.bo.RoleType;
+import unicom.common.DateHelper;
 import unicom.dao.BaseDaoInterface;
 
 @Service(value="authenticationService")
@@ -19,10 +22,19 @@ public class AuthenticationService {
 	protected Log log = LogFactory.getLog(this.getClass());
 	
 	private BaseDaoInterface baseDao;
-
+ 
 	@Autowired
 	public void setBaseDao(BaseDaoInterface baseDao) {
 		this.baseDao = baseDao;
+	}
+	
+	private int accountFrozeThreshold = 14;//14日不登录就冻结，管理员除外
+	 
+	public int getAccountFrozeThreshold() {
+		return accountFrozeThreshold;
+	}
+	public void setAccountFrozeThreshold(int accountFrozeThreshold) {
+		this.accountFrozeThreshold = accountFrozeThreshold;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -44,11 +56,21 @@ public class AuthenticationService {
 		if(acctObj == null ){
 			throw new RuntimeException("帐号不存在");
 		}
-		  
+		 
 		Integer state = (Integer) acctObj.get("state");
 		if(state != null && state.equals(new Integer(0))){
 			throw new RuntimeException("帐号已经禁用。");
 		}
+		
+		String roles = (String) acctObj.get("roles");
+		if(! (roles != null && roles.contains(RoleType.ADMIN.getName())) ){//非管理员
+			Date logon_time = (Date) acctObj.get("logon_time");
+			if(logon_time != null && new Date().getTime() - logon_time.getTime() > accountFrozeThreshold * DateUtils.MILLIS_IN_DAY ){
+				//除冻结状态:清除最近登录时间即可
+				throw new RuntimeException("帐号超过 "+accountFrozeThreshold+" 日未登录，已经冻结。如需解除冻结状态，请联系管理员");
+			}
+		}
+		
 		
 		String pswd = (String) acctObj.get("password");
 		
@@ -65,7 +87,7 @@ public class AuthenticationService {
 		accountInfo.setPassword(password);
 		accountInfo.setBranch((String) acctObj.get("branch"));
 		accountInfo.setLevel((Integer) acctObj.get("M_level"));
-		accountInfo.setRoles((String) acctObj.get("roles"));
+		accountInfo.setRoles(roles);
 		
 		accountInfo.setIp(ip);
 		accountInfo.setLoginTime(new Date());

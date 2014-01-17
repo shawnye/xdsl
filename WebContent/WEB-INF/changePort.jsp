@@ -73,6 +73,30 @@
 			return false;
 		}
 		
+		if(form.new_sn.value){
+			var sn_reg = /^0750\d{6}$/;
+			var sn_reg2 = /^[a-zA-Z]+\d+$/;
+			if(! sn_reg.test(form.new_sn.value) &&! sn_reg2.test(form.new_sn.value) ){
+				alert('FTTH SN必须是0750开头10位数字或英文开头+数值');
+				form.new_sn.focus();
+				return false;
+			}
+		}
+		
+		if(form.new_address.value){
+			var address_reg = /.{6,}/;
+			var address_reg2 = /(蓬江|江海|新会|鹤山|台山|恩平|开平)/;
+			if(! address_reg.test(form.new_address.value) ){
+				alert('装机地址不能少于6个中文字');
+				form.new_address.focus();
+				return false;
+			}else if(! address_reg2.test(form.new_address.value) ){
+				alert('装机地址必须包含7区字眼（蓬江、江海、新会、鹤山、台山、恩平、开平）');
+				form.new_address.focus();
+				return false;
+			}
+		}
+		
 		var c = window.confirm('您确定更新？');
 		if(!c){
 			return false;
@@ -137,7 +161,7 @@
 			<td>是否占用</td>
 		
 		<c:if test="${ fn:trim(userInfo.type) == 'FTTH'}">
-			<td>SN</td>	 
+			<td style="color:red;">SN</td>	 
 			<td>ONT端口总数</td>
 			<td>ONT端口已占用数</td>
 		</c:if>	
@@ -163,7 +187,7 @@
 
 			<td>${ userInfo.used } </td> 
 			
-<c:if test="${ fn:trim(userInfo.type) == 'FTTH'}">
+<c:if test="${ fn:trim(userInfo.type) == 'FTTH' || fn:trim(newPort.type) == 'FTTH'}">
 			<td>${ userInfo.sn }</td>
 			<td>${ userInfo.ont_ports }</td>
 			<td>${ userInfo.used_ont_ports }</td>
@@ -171,7 +195,8 @@
 		</tr>
 		<tr>
  			<td title="必填">新J_ID:<input type="text" name="new_j_id" id="j_id" value="${ newPort.j_id }" size="10" class="edit"><span style="color:red;">*</span><br/>
- 			新ONT端口<input type="text" name="new_ont_id" id="ont_id" value="${ newPort.ont_id }" size="10" class="edit" title="FTTH必填，一般端口值应为1,2,3,4">
+ 			新ONT端口<input type="text" name="new_ont_id" id="ont_id" value="${ newPort.ont_id }" size="10" class="edit" title="新端口为FTTH必填，一般端口值应为1,2,3,4"><br/>
+ 			新FTTH SN<input type="text" name="new_sn" id="sn" value="${ newPort.sn}" size="10" class="edit" title="新端口为FTTH建议填写,不变不用填"><br/>
  			
  			</td>
 			<%--<td>${ newPort.area }</td> --%>
@@ -187,7 +212,7 @@
 			<td>${ newPort.outer_vlan }</td>
 			<td>${ newPort.inner_vlan }</td>
 			<td>${ newPort.used } <c:if test="${ not empty newPort.j_id && empty newPort.used }">已坏</c:if> </td> 
-<c:if test="${ fn:trim(userInfo.type) == 'FTTH'}">
+<c:if test="${ fn:trim(userInfo.type) == 'FTTH' || fn:trim(newPort.type) == 'FTTH'}">
 			<td>${ newPort.sn }</td>
 			<td>${ newPort.ont_ports }</td>
 			<td>${ newPort.used_ont_ports }</td>
@@ -197,7 +222,10 @@
 </table>
 		</li>
 		<li style="color:red;">
-			<input type="checkbox" value="true" name="makeFault" id="makeFault">原机房端口置坏? (因原机房端口坏而更换端口的可以勾选)
+			<input type="checkbox" value="true" name="makeFault" id="makeFault">原机房端口置坏? (因原机房端口坏而更换端口的可以勾选,对原FTTH端口，请确保只有一个用户)
+		</li>
+		<li>
+			移机新地址：<input type="text" name="new_address" value="${ newPort.address }" id="new_address" class="edit" size="50">(移机时填写, 不变不用填写)
 		</li>
 		<li>
 			<span style="vertical-align: top;">更新备注:</span>

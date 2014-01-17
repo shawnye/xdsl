@@ -133,15 +133,20 @@ public class UserInfoSaveServlet extends BaseServlet  {
         String sn = (String) userInfo.remove("sn");//update jx_info
     	Map jxInfo = jxInfoService.findByKey(""+j_id);
 
+    	//FIXME 同一个设备FTTH SN无法修改！无法区分是移机还是错误填写。
         if(StringUtils.isNotBlank(sn)){
         	if(jxInfo != null){
-        		String sn0 = (String) jxInfo.get("sn");
+        		String sn0 = (String) jxInfo.get("sn");//原SN
         		if(StringUtils.isNotBlank(sn0) && !sn0.trim().equals(sn.trim())){
 //        			request.setAttribute("userInfo", userInfo);
+        			if(accountInfo.getAdmin()){
+        				log.warn( "可能同一个设备FTTH SN冲突: 设备端口号(J_ID)=" + j_id + ",原SN=" + sn0 + ",您新填写的SN=" + sn);
+        			}else{
+        				gotoPopup(request, response, "同一个设备FTTH SN冲突: 设备端口号(J_ID)=" + j_id + ",原SN=" + sn0 + ",您新填写的SN=" + sn);
+              			 
+            			return;
+        			}
         			
-        			gotoPopup(request, response, "同一个设备FTTH SN冲突: 设备端口号(J_ID)=" + j_id + ",原SN=" + sn0 + ",您新填写的SN=" + sn);
-       			 
-        			return;
         		}
         	}
         }

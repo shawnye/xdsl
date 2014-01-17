@@ -643,7 +643,7 @@ $(document).ready(function() {
 		</tr>
 		<tr>
 			<td>FTTH SN：</td>
-			<td><input type="text" name="sn" id="sn" value="${ userInfo.sn }" size="40" ></td>
+			<td><input type="text" name="sn" id="sn" value="${ userInfo.sn }" size="40" <c:if test="${not empty userInfo.sn && ! sessionScope.accountInfo.admin }">readonly="readonly"</c:if> title="设定后只有管理员可以在此修改！"></td>
 			<td><span style="color:green;">*</span>当产品类型为FTTH必填，0750开头10位数字</td> 
 		</tr>
 		<tr>

@@ -31,11 +31,22 @@ public class ChangePortServlet extends BaseServlet {
 		String u_id = request.getParameter("u_id");
 //		String old_j_id = request.getParameter("old_j_id");
 		String new_j_id = request.getParameter("new_j_id");
+		  
+		String new_sn = request.getParameter("new_sn");
+		if(new_sn != null){
+			new_sn = new_sn.trim();
+		}
+		String new_address = request.getParameter("new_address");
+		if(new_address != null){
+			new_address = new_address.trim();
+		}
 		
 		if(StringUtils.isBlank(new_j_id)){
 			gotoPopup(request, response, "新J_ID为空！" );
 			 
 			return;
+		}else{
+			new_j_id = new_j_id.trim();
 		}
 		
 		String new_ont_id = request.getParameter("new_ont_id");
@@ -57,17 +68,12 @@ public class ChangePortServlet extends BaseServlet {
 		Boolean makeFault = Boolean.valueOf(request.getParameter("makeFault"));
 		String type = (String) userInfo.get("type");
 		
-		if(type != null && type.trim().equalsIgnoreCase("FTTH")){//原端口为FTTH
-//			if(StringUtils.isBlank(new_ont_id)){
-//				request.setAttribute("error", "FTTH端口必须填写ONT端口，J_ID=" + new_j_id);
-//				request.getRequestDispatcher("/WEB-INF/changePort.jsp").forward(request, response);
-//				 
-//				return;
-//			}
-			
-		}else{
-			new_ont_id = null;//自动忽略
-		}
+//		if(type != null && type.trim().equalsIgnoreCase("FTTH")){//原端口为FTTH
+// 
+//		}else{//FIXME: 无意义，应该是新端口需要注意
+//			new_ont_id = null;//自动忽略
+//			new_sn = null;//避免被置空
+//		}
 
 		if(makeFault){//必须确保端口无用户数据
 			if(type != null && type.trim().equalsIgnoreCase("FTTH")){
@@ -83,12 +89,18 @@ public class ChangePortServlet extends BaseServlet {
 			userInfo.put("used", "已坏");
 		}
 		
+		if(StringUtils.isNotBlank(new_address)){
+			userInfo.put("address", new_address);
+		}
+		//FIXME 是否占用：FTTH: used_ont_ports> 1 ? 
+		//       非FTTH: used=0
 		request.setAttribute("userInfo",userInfo);//含通路
 		
 		JxInfoService jxInfoService = (JxInfoService) wc.getBean("jxInfoService");
 		
 		Integer j_id = (Integer) userInfo.get("j_id");
 		String ont_id = (String) userInfo.get("ont_id");
+		String sn = (String) userInfo.get("sn");
 		Integer ont_ports = (Integer) userInfo.get("ont_ports");
 
 
@@ -126,6 +138,8 @@ public class ChangePortServlet extends BaseServlet {
 						
 					}
 				}
+				
+				
 			}else{//非FTTH
  				request.setAttribute("error", "机房端口（J_ID)没有改变，系统不做任何修改: J_ID=" + j_id );
 				request.getRequestDispatcher("/WEB-INF/changePort.jsp").forward(request, response);
@@ -154,11 +168,33 @@ public class ChangePortServlet extends BaseServlet {
 		}
  		
 		String newType = (String) newPort.get("type");
-		if("FTTH".equalsIgnoreCase(newType.trim()) && StringUtils.isBlank(new_ont_id)){
-			request.setAttribute("error", "新端口[J_ID="+new_j_id+"]类型为FTTH，必须填写新ONT端口");
-			request.getRequestDispatcher("/WEB-INF/changePort.jsp").forward(request, response);
-			return;
+		if(newType == null || ! newType.trim().equalsIgnoreCase("FTTH")){
+			new_ont_id = null;//自动忽略
+			new_sn = null;//避免被置空
 		}
+		
+		
+		if("FTTH".equalsIgnoreCase(newType.trim()) ){
+			if( StringUtils.isBlank(new_ont_id)){
+				request.setAttribute("error", "新端口[J_ID="+new_j_id+"]类型为FTTH，必须填写新ONT端口");
+				request.getRequestDispatcher("/WEB-INF/changePort.jsp").forward(request, response);
+				return;
+			}
+			
+			String newPortSn = (String) newPort.get("sn");
+			if(StringUtils.isBlank(newPortSn) && StringUtils.isBlank(new_sn)){
+				request.setAttribute("error", "新端口[J_ID="+new_j_id+"]类型为FTTH，同时原SN为空，必须填写新SN");
+				request.getRequestDispatcher("/WEB-INF/changePort.jsp").forward(request, response);
+				return;
+			}
+			
+		}else{
+			new_ont_id = null;//自动忽略
+			new_sn = null;//避免被置空
+		}
+		
+		
+
 		
 		String oldType = (String) userInfo.get("type");
 		if("FTTH".equalsIgnoreCase(newType.trim()) && "FTTH".equalsIgnoreCase(oldType.trim())){
@@ -174,20 +210,34 @@ public class ChangePortServlet extends BaseServlet {
 			}
 		}
 		 
+		 
  			String remark = request.getParameter("remark");
 			
 			try {
-				userInfoService.changePort(u_id, new_j_id, new_ont_id, makeFault, remark, accountInfo.getAccount());
+				userInfoService.changePort(u_id, new_j_id, new_ont_id, new_sn, makeFault, remark, accountInfo.getAccount());
+				
+				String address = (String) userInfo.get("address");
+				if(StringUtils.isNotBlank(new_address)){
+					userInfoService.updateAField(u_id, "address", new_address);
+				}
 				
 				if(StringUtils.isNotBlank(new_ont_id)){
 					userInfo.put("ont_id", new_ont_id);
 				}
 				
+				if(StringUtils.isNotBlank(new_sn)){
+					//change sn
+					userInfo.put("sn", new_sn);
+				}
 				
 				String r = "产品号码="+userInfo.get("p_id")+",\t用户名="+userInfo.get("username")+",\t新J_ID="+new_j_id+",\t原J_ID="+ j_id;
-				if(type != null && type.trim().equalsIgnoreCase("FTTH")){
-					r += ",\t新ONT端口="+new_ont_id+",\t原ONT端口="+ ont_id;
+//				
+				r += ",\t新ONT端口="+new_ont_id+",\t原ONT端口="+ ont_id;
+				r += ",\t新SN="+new_sn+",\t原SN="+ sn;
+				if(StringUtils.isNotBlank(new_address)){
+					r += ",\t新地址="+new_address+",\t原地址="+ address;
 				}
+				
 				r += ";\t备注=" + remark;
 				logService.log("更新端口", r , accountInfo.getAccount());
 				log.info("更新端口：u_id=" + u_id);
@@ -196,6 +246,7 @@ public class ChangePortServlet extends BaseServlet {
 			}
 		 
 			newPort = jxInfoService.findByKey(new_j_id);//refresh
+			newPort.put("ont_id", new_ont_id);
 			request.setAttribute("newPort",newPort);
 		
 //		request.setAttribute("message", "更新成功: " + new_j_id);

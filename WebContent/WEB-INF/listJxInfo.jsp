@@ -643,7 +643,7 @@ function markUnused(j_id){
  			
 			 
 			<c:if test="${  empty info.u_id  }"> 
-					<a href="${ctx }/JxInfo/delete?j_id=${ info.j_id }" target="_blank" onclick="return confirm('真的要删除此端口吗? 删除后不可恢复！');" class="haoxian_privilege" style="font-size:smaller;">[删除端口]</a>&nbsp;
+					<a href="${ctx }/JxInfo/delete?j_id=${ info.j_id }" target="_blank" onclick="return confirm('真的要删除此端口吗? 删除后不可恢复！');" class="haoxian_privilege"  >[删除]</a>&nbsp;
 			</c:if>
 		</c:if>
 			</td>
@@ -670,31 +670,31 @@ function markUnused(j_id){
 			>${ info.u_id }&nbsp;
 		<c:if test="${ sessionScope.accountInfo.level < 3 && sessionScope.accountInfo.canEditUserInfo && not empty info.used}">
 			<c:if test="${ empty info.u_id  || ( into.type=='FTTH' && into.used_ont_ports < info.ont_ports) }">
-				<a href="${ctx }/UserInfoPrepareEdit?j_id=${ info.j_id }" target="_blank" >[新增]</a>
+				<a href="${ctx }/UserInfoPrepareEdit?j_id=${ info.j_id }" target="_blank" style="font-size:smaller;">[新增]</a>
 			</c:if>	
 		</c:if>
 		<c:if test="${ sessionScope.accountInfo.level < 3 && not empty info.u_id }">
 			
  			<c:if test="${sessionScope.accountInfo.canEditUserInfo && fn:trim(info.state) != '预拆机' }">
-			<a href="${ctx }/UserInfoChangeState?u_id=${ info.u_id }&state=PREDELETE" target="_blank" onclick="return confirm('您确定要预拆机(${ info.p_id })吗？');">[预拆机]</a>
+			<a href="${ctx }/UserInfoChangeState?u_id=${ info.u_id }&state=PREDELETE" target="_blank" onclick="return confirm('您确定要预拆机(${ info.p_id })吗？');" style="font-size:smaller;">[预拆机]</a>
 			</c:if>
 			<c:if test="${(sessionScope.accountInfo.haoxian || sessionScope.accountInfo.admin) && fn:trim(info.state) == '预拆机' }">
 			<a href="${ctx }/UserInfoChangeState?u_id=${ info.u_id }&state=NORMAL&recover=true" target="_blank" onclick="return confirm('您确定要恢复(${ info.p_id }）状态为正常吗？');" class="haoxian_privilege" >[恢复]</a>&nbsp;
 			
-			<a href="${ctx }/UserInfoDelete?u_id=${ info.u_id }&delete_type=0" target="_blank" onclick="return confirm('您确定要拆机(${ info.p_id })吗？(拆机后不可恢复)');"><span style="color:red;">[拆机竣工]</span></a>
+			<a href="${ctx }/UserInfoDelete?u_id=${ info.u_id }&delete_type=0" target="_blank" onclick="return confirm('您确定要拆机(${ info.p_id })吗？(拆机后不可恢复)');" style="font-size:smaller;"><span style="color:red;">[拆机竣工]</span></a>
 			&nbsp;</c:if>
 			<%-- 端口与文员可以修改 --%>
 			<c:if test="${ sessionScope.accountInfo.canChangePort || sessionScope.accountInfo.daiwei}">
-			<a href="${ctx }/PrepareChangePort?u_id=${ info.u_id }" target="_blank">[更新端口]</a>
+			<a href="${ctx }/PrepareChangePort?u_id=${ info.u_id }" target="_blank" style="font-size:smaller;">[更新端口]</a>
 			&nbsp;</c:if>
 			
 			<c:if test="${sessionScope.accountInfo.canEditUserInfo }">
 				
 				<c:if test="${ info.elapse_days < 30}">
-				<a href="javascript:void(0);"  onclick="return disorder('${ info.p_id }','${ info.u_id }',1);" title="30日内可退单">[退单]</a>
+				<a href="javascript:void(0);"  onclick="return disorder('${ info.p_id }','${ info.u_id }',1);" title="30日内可退单" style="font-size:smaller;">[退单]</a>
 				&nbsp;</c:if>
  				
-				<a href="${ctx }/UserInfoPrepareEdit?u_id=${ info.u_id }" target="_blank">[更新]</a>
+				<a href="${ctx }/UserInfoPrepareEdit?u_id=${ info.u_id }" target="_blank" style="font-size:smaller;" title="主要是更新用户信息">[更新]</a>
 			</c:if>
 			
 		</c:if>

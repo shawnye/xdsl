@@ -1215,13 +1215,14 @@ public class UserInfoService extends AbstractService implements FileExporter,Fil
 	 * 如果是FTTH,SN也要迁移，相同光猫的用户也迁移《相当于割接》？
 	 * @param u_id
 	 * @param new_j_id
+	 * @param new_sn TODO
 	 * @param makeFault
 	 * 是否置坏
 	 * @param remark
 	 * @param account
 	 * @throws Exception
 	 */
-	public void changePort(String u_id, String new_j_id, String new_ont_id, boolean makeFault, String remark, String account) throws Exception {
+	public void changePort(String u_id, String new_j_id, String new_ont_id, String new_sn, boolean makeFault, String remark, String account) throws Exception {
 		 Map userInfo = this.findByKey(u_id);//old channel
 		 if(userInfo == null){
 			 throw new Exception("非法单号(u_id): " + u_id);
@@ -1236,15 +1237,17 @@ public class UserInfoService extends AbstractService implements FileExporter,Fil
 		 //禁止占用,servlet已经判断
 		 Map override_user_info = this.findByJid(new_j_id, new_ont_id);
 		 if(override_user_info != null){
-			 throw new Exception("端口已经占用: 产品号码=" + override_user_info.get("p_id") + ", U_ID=" + override_user_info.get("u_id")+ ", J_ID=" + override_user_info.get("j_id")+ ", ONT端口=" + override_user_info.get("ont_id"));
+			 throw new Exception("机房端口/ONT端口已经占用: 产品号码=" + override_user_info.get("p_id") + ", U_ID=" + override_user_info.get("u_id")+ ", J_ID=" + override_user_info.get("j_id")+ ", ONT端口=" + override_user_info.get("ont_id"));
 		 }
 		  
 		 
 		 //更新user_info的j_id关联（即重新分派端口）
-		 String update1 = "update user_info  set j_id=?,ont_id=? where u_id=? ";
+		 String update1 = null;
+		 update1 = "update user_info  set j_id=?,ont_id=? where u_id=? ";
+
 		//更新jx_info的旧端口信息
 		 String update2 = null; 
-		 if(makeFault){//置坏
+		 if(makeFault){//置坏(整条通路坏)对FTTH而言，可能同时导致多个用户关联错误
 			 String used_remark = account +  DateHelper.format(new Date(), "[yyyy-MM-dd HH:mm]")+ "[置坏]" + ObjectUtils.toString(remark); 
 			 update2 = "update jx_info set used=null,u_id=null,used_remark='"+used_remark+"' where j_id=? ";
 			 if(remark == null){
@@ -1254,21 +1257,29 @@ public class UserInfoService extends AbstractService implements FileExporter,Fil
 				 remark = "[原机房端口置坏]" + remark;
 			 }
 		 }else{
-			 update2 = "update jx_info set used=0,u_id=null where j_id=? ";
+			 //BUG:对FTTH而言，used_ont_ports>0 时才设置为空！
+			 update2 = "update jx_info set used=0,u_id=null where j_id=? and (type <> 'FTTH' or (type='FTTH' and used_ont_ports > 1))";
 		 }
 		//更新jx_info的新端口信息,转移新的SN端口
-		 String update3 = "update jx_info set used=1,u_id=?,sn=? where j_id=? ";
-		
+		 String update3 = "update jx_info set used=1,u_id=?  where j_id=? ";
+		 if(StringUtils.isNotBlank(new_sn)){
+			 update3 = "update jx_info set used=1,u_id=?,sn=?  where j_id=? ";//FTTH移机后SN直接发生变化
+		 }
+		 
 		 //记录端口更新历史(port_change_hist)
 		 String update4 = "insert into port_change_hist( p_id, u_id ,username, old_j_id, new_j_id, override_u_id, override_p_id, old_ont_id, new_ont_id, remark, change_time, changer) " +
 		 		"values(?,?,?,?,?,?,?,?,?,?,?,?)";
 		 
-		 
-		this.baseDao.batchUpdateASql(update1, new Object[]{new_j_id, new_ont_id, u_id});
-		
+		this.baseDao.batchUpdateASql(update1, new Object[]{new_j_id, new_ont_id,  u_id});
+
 		this.baseDao.batchUpdateASql(update2, new Object[]{old_j_id});
 		
-		this.baseDao.batchUpdateASql(update3, new Object[]{u_id,userInfo.get("sn"),new_j_id});
+		if(StringUtils.isNotBlank(new_sn)){
+			this.baseDao.batchUpdateASql(update3, new Object[]{u_id, new_sn, new_j_id});
+	    }else{
+			this.baseDao.batchUpdateASql(update3, new Object[]{u_id,/*userInfo.get("sn"),*/new_j_id});
+		}
+
 		
 //		Map map = this.findByKey(u_id);//why reread?
 		String old_ont_id = (String)userInfo.get("ont_id");
