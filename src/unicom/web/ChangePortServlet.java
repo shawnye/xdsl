@@ -41,6 +41,11 @@ public class ChangePortServlet extends BaseServlet {
 			new_address = new_address.trim();
 		}
 		
+		String new_user_no = request.getParameter("new_user_no");
+		if(new_user_no != null){
+			new_user_no = new_user_no.trim();
+		}
+		
 		if(StringUtils.isBlank(new_j_id)){
 			gotoPopup(request, response, "新J_ID为空！" );
 			 
@@ -216,10 +221,17 @@ public class ChangePortServlet extends BaseServlet {
 			try {
 				userInfoService.changePort(u_id, new_j_id, new_ont_id, new_sn, makeFault, remark, accountInfo.getAccount());
 				
+				
 				String address = (String) userInfo.get("address");
+				String user_no = (String) userInfo.get("user_no");
 				if(StringUtils.isNotBlank(new_address)){
 					userInfoService.updateAField(u_id, "address", new_address);
 				}
+				
+				if(StringUtils.isNotBlank(new_user_no)){
+					userInfoService.updateAField(u_id, "user_no", new_user_no);
+				}
+				
 				
 				if(StringUtils.isNotBlank(new_ont_id)){
 					userInfo.put("ont_id", new_ont_id);
@@ -230,12 +242,24 @@ public class ChangePortServlet extends BaseServlet {
 					userInfo.put("sn", new_sn);
 				}
 				
+				if(StringUtils.isNotBlank(new_address)){
+					userInfo.put("address", new_address);
+				}
+				
+				if(StringUtils.isNotBlank(new_user_no)){
+					userInfo.put("user_no", new_user_no);
+				}
+				
 				String r = "产品号码="+userInfo.get("p_id")+",\t用户名="+userInfo.get("username")+",\t新J_ID="+new_j_id+",\t原J_ID="+ j_id;
 //				
 				r += ",\t新ONT端口="+new_ont_id+",\t原ONT端口="+ ont_id;
 				r += ",\t新SN="+new_sn+",\t原SN="+ sn;
 				if(StringUtils.isNotBlank(new_address)){
 					r += ",\t新地址="+new_address+",\t原地址="+ address;
+				}
+				
+				if(StringUtils.isNotBlank(new_user_no)){
+					r += ",\t新帐号="+new_user_no +",\t原帐号="+ user_no;
 				}
 				
 				r += ";\t备注=" + remark;

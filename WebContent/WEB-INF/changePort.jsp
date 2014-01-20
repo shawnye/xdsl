@@ -97,6 +97,13 @@
 			}
 		}
 		
+		var user_no_reg = /\@/;
+		if(form.new_user_no.value && ! user_no_reg.test(form.new_user_no.value) ){
+			alert('帐号必须包含@');
+			form.new_user_no.focus();
+			return false;
+		}
+		
 		var c = window.confirm('您确定更新？');
 		if(!c){
 			return false;
@@ -121,8 +128,8 @@
 			<td>U_ID</td>
 			<td>客户名称</td>
 			<td>产品号码</td>
-			<td>帐号</td>
-			<td>装机地址</td>
+			<td style="color:red;">帐号</td>
+			<td style="color:red;">装机地址</td>
 			<td>竣工时间</td>	
 			<td style="color:red;">ONT端口</td> 
 		</tr>
@@ -155,8 +162,8 @@
 			<td>端口号</td>
 			<td>MDF横列</td>
 
-			<td style="color:red;">外层VLAN</td>
-			<td style="color:red;">内层VLAN</td>
+			<td  >外层VLAN</td>
+			<td  >内层VLAN</td>
 		
 			<td>是否占用</td>
 		
@@ -225,7 +232,10 @@
 			<input type="checkbox" value="true" name="makeFault" id="makeFault">原机房端口置坏? (因原机房端口坏而更换端口的可以勾选,对原FTTH端口，请确保只有一个用户)
 		</li>
 		<li>
-			移机新地址：<input type="text" name="new_address" value="${ newPort.address }" id="new_address" class="edit" size="50">(移机时填写, 不变不用填写)
+			移机新帐号：<input type="text" name="new_user_no"  id="new_user_no" class="edit" size="30">(移机时填写, 不变不用填写)
+		</li>
+		<li>
+			移机新地址：<input type="text" name="new_address"   id="new_address" class="edit" size="50">(移机时填写, 不变不用填写)
 		</li>
 		<li>
 			<span style="vertical-align: top;">更新备注:</span>
