@@ -355,6 +355,7 @@ function collectSelectedItems(delim){
 	<thead>
 		<tr>
 			<td><input type="checkbox" name="c0" id="c0">序号</td>
+			<%--<td>操作</td> --%>
 			<c:forEach items="${ report.displayedTitles }" var="t" varStatus="s">
 				<td <c:if test="${s.index == report.keyIndex }">class="key_field"</c:if> >${ t }</td>
 			</c:forEach>
@@ -363,6 +364,9 @@ function collectSelectedItems(delim){
 	<tbody>
 		<c:forEach items="${report.data }" var="d" varStatus="s">
 		<tr>
+			<%--
+			<td><c:if test="${ d[4]== 1 }"><a href="${ctx }/Manager?acct=${d[0] }" target="_blank">[解冻]</a></c:if></td>
+			 --%>
 			<td>
 			<input type="checkbox" name="c${ s.count }" id="c${ s.count }" value="${ d[report.keyField]}">
 			${ s.count }</td>

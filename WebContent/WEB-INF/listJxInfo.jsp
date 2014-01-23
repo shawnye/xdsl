@@ -678,7 +678,7 @@ function markUnused(j_id){
  			<c:if test="${sessionScope.accountInfo.canEditUserInfo && fn:trim(info.state) != '预拆机' }">
 			<a href="${ctx }/UserInfoChangeState?u_id=${ info.u_id }&state=PREDELETE" target="_blank" onclick="return confirm('您确定要预拆机(${ info.p_id })吗？');" style="font-size:smaller;">[预拆机]</a>
 			</c:if>
-			<c:if test="${(sessionScope.accountInfo.haoxian || sessionScope.accountInfo.admin) && fn:trim(info.state) == '预拆机' }">
+			<c:if test="${(sessionScope.accountInfo.canEditUserInfo || sessionScope.accountInfo.admin) && fn:trim(info.state) == '预拆机' }">
 			<a href="${ctx }/UserInfoChangeState?u_id=${ info.u_id }&state=NORMAL&recover=true" target="_blank" onclick="return confirm('您确定要恢复(${ info.p_id }）状态为正常吗？');" class="haoxian_privilege" >[恢复]</a>&nbsp;
 			
 			<a href="${ctx }/UserInfoDelete?u_id=${ info.u_id }&delete_type=0" target="_blank" onclick="return confirm('您确定要拆机(${ info.p_id })吗？(拆机后不可恢复)');" style="font-size:smaller;"><span style="color:red;">[拆机竣工]</span></a>

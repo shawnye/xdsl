@@ -28,7 +28,7 @@ public class AuthenticationService {
 		this.baseDao = baseDao;
 	}
 	
-	private int accountFrozeThreshold = 14;//14日不登录就冻结，管理员除外
+	private int accountFrozeThreshold = 21;//21日不登录就冻结，管理员除外
 	 
 	public int getAccountFrozeThreshold() {
 		return accountFrozeThreshold;
