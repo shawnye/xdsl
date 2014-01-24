@@ -59,6 +59,7 @@
 	}
 	#cond_table{
 		font-size:smaller;
+		width:99%;
 	}
 </style>
 <script type="text/javascript">
@@ -353,16 +354,16 @@ function markUnused(j_id){
 				<%--<input type="button" id="wait_to_stop_service_help" value="待停机" style="background: white"/><input type="button" id="stop_service_help" value="停机" style="background: white"/> --%>
 				</td>
 				<td class="label" style="color:red;">产品号码：</td>
-				<td>新<input type="text" name="p_id" value="${ p_id }" id="p_id" size="10" title="按新产品号码查询">&nbsp;
-				旧<input type="text" name="old_p_id" value="${ old_p_id }"  size="10" title="按旧产品号码查询">
-				<span  title="仅仅针对新产品号码"><input type="checkbox" id="p_id_exact">精确查询</span>
+				<td><input type="text" name="p_id" value="${ p_id }" id="p_id" size="13" title="按新产品号码查询">&nbsp;
+				<%--旧<input type="text" name="old_p_id" value="${ old_p_id }"  size="10" title="按旧产品号码查询"> --%>
+				<span title="仅仅针对新产品号码"><input type="checkbox" id="p_id_exact" title="使用精确查询速度飞快">精查</span>
 				</td>
 				<td class="label" style="color:red;">帐号：</td>
-				<td><input type="text" name="user_no" value="${ user_no }" width="40"></td>
+				<td><input type="text" name="user_no" value="${ user_no }" size="13"><input type="checkbox" id="user_no_exact" title="使用精确查询速度飞快">精查</span></td>
 			</tr>
 			<tr>
 				<td class="label">用户区域：</td>
-				<td><input type="text" name="area=" id="area" value="${ area }" size="10" title="精确查询">
+				<td><input type="text" name="area=" id="area" value="${ area }" size="10" title="精查">
 		<select id="area_help">
 			<option value="">[请选择]</option>
 			<option value="蓬江">蓬江</option>
@@ -375,7 +376,7 @@ function markUnused(j_id){
 		</select>
 				</td>
 				<td class="label" style="color:red;">机房：</td>
-				<td><input type="text" name="jx" value="${ jx }" id="jx" size="10"><input type="checkbox" id="jx_exact" >精确查询
+				<td><input type="text" name="jx" value="${ jx }" id="jx" size="10"><input type="checkbox" id="jx_exact" >精查
 				<br/><a href="${ctx }/report?@id=4&page_limit=200" target="_blank">机房名称表 </a>
 				</td>
 				<td class="label">装机地址：</td>
@@ -451,11 +452,11 @@ function markUnused(j_id){
 					</select>
 				</td>
 				<td class="label" style="color:gray;">状态：</td>
-				<td><input type="text" name="state"  id="state" value="${ state }" size="10">
+				<td><input type="text" name="state="  id="state" value="${ state }" size="10" title="精确查询">
 		<select id="state_help">
 			<option value="">[请选择]</option>
 			<option value="新装竣工">新装竣工</option>
-			<option value="预拆机">预拆机</option>
+			<option value="预拆机">预拆机*</option>
 			<option value="未分配">未分配</option>
 			<option value="更换端口">更换端口</option>
 			<option value="移机竣工">移机竣工</option>
@@ -463,7 +464,7 @@ function markUnused(j_id){
 			<option value="正常">正常</option>
 			<option value="预分配">预分配</option>
 			<option value="已分配">已分配</option>
-			<option value="已拆机">已拆机</option>
+			<option value="已拆机" style="color:gray;">已拆机</option>
 		</select>
 				</td>
 				<td class="label">MDF横列：</td>
@@ -504,7 +505,7 @@ function markUnused(j_id){
 			<tr>
 				<td class="label" style="color:red;">AD端口类型：</td>
 				<td>
-				<input type="text" name="type=" id="type" value="${ type }" size="10" title="精确查询">
+				<input type="text" name="type=" id="type" value="${ type }" size="10" >
 		<select id="type_help">
 			<option value="">[请选择]</option>
 			<c:forTokens items="AD,PON-AD,PON-LAN,LAN,WLAN,FTTH" delims="," var="i">
@@ -515,8 +516,8 @@ function markUnused(j_id){
  				</td>
  				<td class="label">OLT名称：</td>
 				<td><input type="text" name="olt" value="${ olt }" width="40" ></td>
- 				<td class="label">已屏蔽端口：</td>
-				<td>不显示
+ 				<td class="label" style="color:gray;">已屏蔽端口：</td>
+				<td style="color:gray;">不显示
 				<%--
 				<c:choose>
 					<c:when test="${ not empty mask }">
@@ -528,8 +529,8 @@ function markUnused(j_id){
 				 
 			</tr>
 			<tr>
-				<td class="label">ONT端口：</td>
-				<td><input type="text" name="ont_id=" id="ont_id" value="${ ont_id }" width="35" title="精确查询"/>
+				<td class="label">FTTH ONT端口：</td>
+				<td><input type="text" name="ont_id=" id="ont_id" value="${ ont_id }" width="35" title="精确查询,一般为1,2,3,4" />
  				</td>
 				<td class="label">FTTH-SN号：</td>
 				<td><input type="text" name="sn" id="sn" value="${ sn }" width="35" /></td>
@@ -539,11 +540,11 @@ function markUnused(j_id){
 			<tr>
 				<td class="label">端口备注：</td>
 				<td><input type="text" name="jremark" id="jremark" value="${ jremark }" width="35" />
-				<input type="button" value="导入批次" onclick="updateRemark(this)">
+				<%--<input type="button" value="导入批次" onclick="updateRemark(this)"> --%>
 				</td>
-				<td class="label">端口资料导入批次：</td>
+				<td class="label" title="端口资料导入批次">端口导入批次：</td>
 				<td><input type="text" name="jx_batch_num" id="jx_batch_num" value="${ jx_batch_num }" width="35" /></td>
-				<td class="label">用户资料导入批次：</td>
+				<td class="label" title="用户资料导入批次">用户导入批次：</td>
 				<td><input type="text" name="ui_batch_num" id="ui_batch_num" value="${ ui_batch_num }" width="35" /></td>
 			</tr>
 
@@ -678,7 +679,7 @@ function markUnused(j_id){
  			<c:if test="${sessionScope.accountInfo.canEditUserInfo && fn:trim(info.state) != '预拆机' }">
 			<a href="${ctx }/UserInfoChangeState?u_id=${ info.u_id }&state=PREDELETE" target="_blank" onclick="return confirm('您确定要预拆机(${ info.p_id })吗？');" style="font-size:smaller;">[预拆机]</a>
 			</c:if>
-			<c:if test="${(sessionScope.accountInfo.canEditUserInfo || sessionScope.accountInfo.admin) && fn:trim(info.state) == '预拆机' }">
+			<c:if test="${(sessionScope.accountInfo.canChangePort || sessionScope.accountInfo.daiwei || sessionScope.accountInfo.admin) && fn:trim(info.state) == '预拆机' }">
 			<a href="${ctx }/UserInfoChangeState?u_id=${ info.u_id }&state=NORMAL&recover=true" target="_blank" onclick="return confirm('您确定要恢复(${ info.p_id }）状态为正常吗？');" class="haoxian_privilege" >[恢复]</a>&nbsp;
 			
 			<a href="${ctx }/UserInfoDelete?u_id=${ info.u_id }&delete_type=0" target="_blank" onclick="return confirm('您确定要拆机(${ info.p_id })吗？(拆机后不可恢复)');" style="font-size:smaller;"><span style="color:red;">[拆机竣工]</span></a>
