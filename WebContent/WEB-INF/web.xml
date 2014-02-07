@@ -600,4 +600,25 @@
     <url-pattern>/Mdfport/Json/List</url-pattern>
   </servlet-mapping>
   
+   <servlet>
+    <description></description>
+    <display-name>UpdateMaskServlet</display-name>
+    <servlet-name>UpdateMaskServlet</servlet-name>
+    <servlet-class>unicom.web.UpdateMaskServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateMaskServlet</servlet-name>
+    <url-pattern>/UpdateMask</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <description></description>
+    <display-name>PrepareUpdateMaskServlet</display-name>
+    <servlet-name>PrepareUpdateMaskServlet</servlet-name>
+    <servlet-class>unicom.web.PrepareUpdateMaskServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PrepareUpdateMaskServlet</servlet-name>
+    <url-pattern>/PrepareUpdateMask</url-pattern>
+  </servlet-mapping>
 </web-app>

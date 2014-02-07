@@ -893,32 +893,72 @@ public class JxInfoService extends AbstractService implements FileExporter{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public int updateMask(Boolean mask, String jx, String sbh, Integer slot , Integer sb_port){
+	public int updateMask(Boolean mask, String jx, String sbh, Integer[] slot , Integer[] sb_port){
 		if(StringUtils.isBlank(jx) || StringUtils.isBlank(sbh)){
 			return 0;
 		}
 		
 		List args = new ArrayList();
 		 StringBuilder sb = new StringBuilder();
-		if(mask){ 
+		 
+		 if(mask){//应当确保没有没有在用用户！
+			 sb.append("select count(*) from jx_info j ,user_info u where j.j_id=u.j_id and jx=? and sbh=? ");
+			 args.add(jx);	
+			  args.add(sbh);
+			  
+			  if(slot != null && slot.length > 0){
+				  sb.append(" and slot in (");
+				  sb.append(StringUtils.repeat("?,", slot.length));
+				  sb.deleteCharAt(sb.length()-1);//delete last ,
+				  sb.append(")");
+				  args.addAll(Arrays.asList(slot));	
+			  }
+			  
+			  if(sb_port != null && sb_port.length > 0){
+				  sb.append(" and sb_port in (");
+				  sb.append(StringUtils.repeat("?,", sb_port.length));
+				  sb.deleteCharAt(sb.length()-1);//delete last ,
+				  sb.append(")");
+				  args.addAll(Arrays.asList(sb_port));		
+			  }
+			  
+			  Long count = baseDao.count(sb.toString(), args.toArray());
+			  if(count > 0){
+				  log.error("不能屏蔽端口：包含"+count+"个用户信息，机房=" + jx + ",设备号=" + sbh + ",槽号="+ StringUtils.join(slot,",") + ",端口号=" + StringUtils.join(sb_port,","));
+				  throw new RuntimeException("不能屏蔽端口：包含"+count+"个用户信息，机房=" + jx + ",设备号=" + sbh + ",槽号="+StringUtils.join(slot,",") + ",端口号=" + StringUtils.join(sb_port,","));
+			  }
+		 }
+		 
+		 
+		 //reset
+		 args.clear();
+		 sb = new StringBuilder();
+		if(mask){  
 		  sb.append("update jx_info set mask=? where jx=? and sbh=? ") ;
 		  args.add(1);	
 		 
-		}else{
+		}else{ 
 			sb.append("update jx_info set mask=null where jx=? and sbh=? ") ;
 		}
 		  args.add(jx);	
 		  args.add(sbh);	
 		  
-		  if(slot != null){
-			  sb.append(" and slot=?");
-			  args.add(slot);	
+		  if(slot != null && slot.length > 0){
+			  sb.append(" and slot in (");
+			  sb.append(StringUtils.repeat("?,", slot.length));
+			  sb.deleteCharAt(sb.length()-1);//delete last ,
+			  sb.append(")");
+			  args.addAll(Arrays.asList(slot));	
 		  }
 		  
-		  if(sb_port != null){
-			  sb.append(" and sb_port=?");
-			  args.add(slot);	
+		  if(sb_port != null && sb_port.length > 0){
+			  sb.append(" and sb_port in (");
+			  sb.append(StringUtils.repeat("?,", sb_port.length));
+			  sb.deleteCharAt(sb.length()-1);//delete last ,
+			  sb.append(")");
+			  args.addAll(Arrays.asList(sb_port));		
 		  }
+		  
 		return this.baseDao.update(sb.toString(), args.toArray());
 	}
 	
@@ -928,6 +968,24 @@ public class JxInfoService extends AbstractService implements FileExporter{
 		}
 		List args = new ArrayList();
 		 StringBuilder sb = new StringBuilder();
+		 
+		 if(mask){//应当确保没有没有在用用户！
+			 sb.append("select count(*) from jx_info j  where j_id in ( ");
+			 sb.append(StringUtils.repeat("?,", j_ids.length));
+			 sb.deleteCharAt(sb.length()-1);//delete last ,
+			 sb.append(")");
+			 args.addAll(Arrays.asList(j_ids));	
+			 
+			  Long count = baseDao.count(sb.toString(), args.toArray());
+			  if(count > 0){
+				  log.error("不能屏蔽端口：包含"+count+"个用户信息: " + StringUtils.join(j_ids,","));
+				  throw new RuntimeException("不能屏蔽端口：包含"+count+"个用户信息: " + StringUtils.join(j_ids,","));
+			  }
+		 }
+		//reset
+		 args.clear();
+		 sb = new StringBuilder();
+		 
 		if(mask){
 		  args.add(1);	
 		  sb.append("update jx_info set mask=? where j_id in (") ;
